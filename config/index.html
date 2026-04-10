@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心脏危机预警项目组</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            overflow: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 60px 40px;
+            max-width: 900px;
+            position: relative;
+        }
+        
+        .heart-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 40px;
+            position: relative;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+        
+        .heart-icon::before,
+        .heart-icon::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 64px;
+            background: #e11d48;
+            border-radius: 40px 40px 0 0;
+            transform-origin: bottom center;
+        }
+        
+        .heart-icon::before {
+            left: 40px;
+            transform: rotate(-45deg);
+        }
+        
+        .heart-icon::after {
+            left: 0;
+            transform: rotate(45deg);
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #1f2937;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #e11d48, #fb7185);
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            margin-top: 50px;
+            font-size: 16px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+        
+        .ecg-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 50 L40 50 L50 20 L60 80 L70 10 L80 90 L90 50 L200 50' fill='none' stroke='%23e11d48' stroke-width='2'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px 100px;
+        }
+        
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border: 1px solid rgba(225, 29, 72, 0.1);
+            border-radius: 50%;
+            animation: pulse 3s ease-out infinite;
+        }
+        
+        .pulse-ring:nth-child(2) {
+            animation-delay: 1s;
+            width: 400px;
+            height: 400px;
+        }
+        
+        .pulse-ring:nth-child(3) {
+            animation-delay: 2s;
+            width: 500px;
+            height: 500px;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 24px;
+            }
+            .title {
+                font-size: 24px;
+            }
+            .heart-icon {
+                width: 60px;
+                height: 60px;
+            }
+            .heart-icon::before,
+            .heart-icon::after {
+                width: 30px;
+                height: 48px;
+            }
+            .heart-icon::before {
+                left: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ecg-bg"></div>
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring"></div>
+    
+    <div class="container">
+        <div class="heart-icon"></div>
+        <h1 class="title">欢迎来到"996下的心脏危机<br>AI可解释机器学习与过劳风险组合的预警研究"项目组</h1>
+        <p class="subtitle">项目负责人：何萌</p>
+    </div>
+</body>
+</html>
