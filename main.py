@@ -69,12 +69,5 @@ async def startup_event():
 async def root():
     return FileResponse("config/index.html")
 
-@app.get("/login-page")
-async def login_page():
-    return {"msg":"该接口将返回登录页面"}
-
-@app.get("/index-page")
-async def index_page():
-    return {"msg":"该接口将返回主页页面"}
 
 print("\033[1;31mdosc-site\thttps://heart-crisis.vip.cpolar.top/docs\033[0m")
