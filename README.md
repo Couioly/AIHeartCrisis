@@ -43,24 +43,8 @@ HeartCrisisAPI/
 
 ### 2. 安装项目依赖
 
-在项目根目录下执行以下命令安装依赖：
+在项目根目录下执行以下命令安装依赖。打开当前环境终端，然后执行：
 
-```bash
-pip install fastapi uvicorn sqlalchemy aiomysql python-dotenv openai pydantic
-```
-
-或创建 `requirements.txt` 文件，包含以下内容：
-```
-fastapi
-uvicorn
-sqlalchemy
-aiomysql
-python-dotenv
-openai
-pydantic
-```
-
-然后执行：
 ```bash
 pip install -r requirements.txt
 ```
@@ -80,7 +64,7 @@ DB_NAME=health_db       # 数据库名称
 # ===================== AI 模型配置 =====================
 DOUBAO_API_KEY=your_doubao_api_key      # 豆包 API Key
 DOUBAO_BASE_URL=https://ark.cn-beijing.volces.com/api/v3  # 豆包 API 地址
-DOUBAO_MODEL=ep-20241202xxxxxx-xxxxx   # 豆包模型 ID
+DOUBAO_MODEL=doubao-xxxxxx-xxxxx   # 豆包模型 ID
 ```
 
 ### 4. 创建数据库
