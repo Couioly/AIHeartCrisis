@@ -69,9 +69,5 @@ async def startup_event():
 async def root():
     return FileResponse("config/index.html")
 
-@app.get("/ui")
-async def ui():
-    return FileResponse("排除项/UI.html")
 
 print("\033[1;31mdosc-site\thttps://heart-crisis.vip.cpolar.top/docs\033[0m")
-print("\033[1;31mui-site\thttps://heart-crisis.vip.cpolar.top/ui\033[0m")
