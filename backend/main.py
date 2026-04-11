@@ -47,12 +47,15 @@ async def create_tables():
         from models.db_conn import async_engine
         from models.base import Base
         async with async_engine.begin() as conn:
+            # 此处自动创建数据表会报错，采用手动创建
             await conn.run_sync(Base.metadata.create_all)
 
-            # 此处自动创建数据表会报错，采用手动创建
+            # 手动创建
             # from models.user import User
             # from models.user_health import UserHealth
             # from models.history import History
+            # from models.test_data import TestData
+            # await conn.run_sync(Base.metadata.tables["test_data"].create)
             # await conn.run_sync(Base.metadata.tables["history"].create)
             # await conn.run_sync(Base.metadata.tables["user"].create)
             # await conn.run_sync(Base.metadata.tables["user_health"].create)
