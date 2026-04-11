@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 心脏预警系统</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+    
+    <div class="auth-container" id="authPage">
+        <div class="grid-bg"></div>
+        <div class="cards-wrapper" id="cardsWrapper">
+            <div class="card heart-card">
+                <div class="ecg-bg"></div>
+                <div class="pulse-rings">
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                </div>
+                <svg class="heart-svg" viewBox="0 0 24 24">
+                    <path class="heart-path" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                <div class="heart-text">
+                    <h2 id="heartTitle">心脏预警系统</h2>
+                    <p id="heartSubtitle">Cardiac Early Warning System</p>
+                </div>
+            </div>
+            <div class="card form-card">
+                <div class="form-content" id="loginForm">
+                    <div class="form-header">
+                        <h1>欢迎回来</h1>
+                        <p>登录以继续使用系统</p>
+                    </div>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="input-field">
+                            <label>用户名</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="loginUsername" placeholder="请输入用户名" required>
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label>密码</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="请输入密码" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-main" id="loginBtn">
+                            <span class="spinner" style="display: none;"></span>
+                            <span>登录</span>
+                        </button>
+                    </form>
+                    <div class="form-switch">
+                        还没有账户？<a onclick="switchToRegister()">立即注册</a>
+                    </div>
+                </div>
+                <div class="form-content hidden" id="registerForm">
+                    <div class="form-header">
+                        <h1>创建账户</h1>
+                        <p>开始您的健康管理之旅</p>
+                    </div>
+                    <form onsubmit="handleRegister(event)">
+                        <div class="input-field">
+                            <label>用户名</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="regUsername" placeholder="请输入用户名" required>
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label>密码</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="regPassword" placeholder="请设置密码" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-main" id="registerBtn">
+                            <span class="spinner" style="display: none;"></span>
+                            <span>创建账户</span>
+                        </button>
+                    </form>
+                    <div class="form-switch">
+                        已有账户？<a onclick="switchToLogin()">立即登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+        });
+
+        // 主题切换
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateThemeIcon(next);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // 登录注册切换
+        function switchToRegister() {
+            const wrapper = document.getElementById('cardsWrapper');
+            wrapper.classList.add('register-mode');
+
+            // 切换表单显示
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+
+            // 更新心脏文字
+            setTimeout(() => {
+                document.getElementById('heartTitle').textContent = '加入我们';
+                document.getElementById('heartSubtitle').textContent = 'Protect Your Heart';
+            }, 300);
+
+            // 清空表单
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function switchToLogin() {
+            const wrapper = document.getElementById('cardsWrapper');
+            wrapper.classList.remove('register-mode');
+
+            // 切换表单显示
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+
+            // 更新心脏文字
+            setTimeout(() => {
+                document.getElementById('heartTitle').textContent = '心脏预警系统';
+                document.getElementById('heartSubtitle').textContent = 'Cardiac Early Warning System';
+            }, 300);
+
+            // 清空表单
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
+        }
+
+        // 登录
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if (data.code === 200) {
+                    sessionStorage.setItem('username', username);
+                    showToast('登录成功！', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 800);
+                } else if (data.code === 404) {
+                    showToast('用户不存在', 'error');
+                } else if (data.code === 401) {
+                    showToast('密码错误', 'error');
+                } else {
+                    showToast(data.message || '登录失败', 'error');
+                }
+            } catch (err) {
+                const errorMessage = err.message || '';
+                if (errorMessage.includes('ECONNREFUSED') || errorMessage.includes('connect') || errorMessage.includes('Server')) {
+                    showToast('服务器异常，请稍后重试', 'error');
+                } else {
+                    showToast('网络错误，请检查网络连接', 'error');
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>登录</span>';
+            }
+        }
+
+        // 注册
+        async function handleRegister(e) {
+            e.preventDefault();
+            const btn = document.getElementById('registerBtn');
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if (data.code === 200) {
+                    showToast('注册成功！', 'success');
+                    setTimeout(() => {
+                        switchToLogin();
+                    }, 1000);
+                } else if (data.code === 400) {
+                    showToast('用户已存在', 'error');
+                } else {
+                    showToast(data.message || '注册失败', 'error');
+                }
+            } catch (err) {
+                const errorMessage = err.message || '';
+                if (errorMessage.includes('ECONNREFUSED') || errorMessage.includes('connect') || errorMessage.includes('Server')) {
+                    showToast('服务器异常，请稍后重试', 'error');
+                } else {
+                    showToast('网络错误，请检查网络连接', 'error');
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>创建账户</span>';
+            }
+        }
+
+        // Toast提示
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+            toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-20px) translateX(-50%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from models.db_conn import get_db
-from service.test_data_service import get_test_data_by_id
+from models import get_db
+from service import get_test_data_by_id
 
 router = APIRouter(tags=["测试数据获取接口"])
 

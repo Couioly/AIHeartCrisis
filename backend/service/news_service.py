@@ -3,7 +3,7 @@ import aiohttp
 from fastapi import HTTPException
 from bs4 import BeautifulSoup
 import fake_useragent
-from schemas.news import NewsResponse, NewsArticle
+from schemas import NewsResponse, NewsArticle
 
 async def get_heart_news():
     """从医脉通心血管内科页面获取新闻数据"""

@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse, FileResponse
 from api import api_router # 导入聚合后的总路由
@@ -44,8 +45,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 # 启动应用时建表
 async def create_tables():
     try:
-        from models.db_conn import async_engine
-        from models.base import Base
+        from models import async_engine, Base
         async with async_engine.begin() as conn:
             # 此处自动创建数据表会报错，采用手动创建
             await conn.run_sync(Base.metadata.create_all)
@@ -72,5 +72,6 @@ async def startup_event():
 async def root():
     return FileResponse("config/index.html")
 
-
-print("\033[1;31mdosc-site\thttp://localhost:8000/docs\033[0m")
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+    print("\033[1;31mdosc-site\thttp://localhost:8000/docs\033[0m")

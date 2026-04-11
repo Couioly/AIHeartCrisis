@@ -1,9 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import and_
-from models.user_health import UserHealth
-from models.history import History
-from models.user import User
+from models import UserHealth, History, User
 from fastapi import HTTPException, status
 
 async def user_history_list(db: AsyncSession, username: str):

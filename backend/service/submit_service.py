@@ -1,9 +1,9 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from models.user import User
-from models.user_health import UserHealth
-from schemas.user_health import UserHealthCreate
+from models import User
+from models import UserHealth
+from schemas import UserHealthCreate
 
 async def submit_user_health(db: AsyncSession, data: UserHealthCreate):
     try:

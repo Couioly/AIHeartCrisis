@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from service.news_service import news_service
+from service import news_service
 
 router = APIRouter(tags=["用户层接口"])
 

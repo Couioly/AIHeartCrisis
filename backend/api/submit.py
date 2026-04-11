@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from models.db_conn import get_db
-from schemas.user_health import UserHealthCreate
-from service.submit_service import submit_user_health
+from models import get_db
+from schemas import UserHealthCreate
+from service import submit_user_health
 
 router = APIRouter(tags=["用户层接口"])
 

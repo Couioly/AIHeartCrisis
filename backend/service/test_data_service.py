@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from models.test_data import TestData
+from models import TestData
 
 async def get_test_data_by_id(db: AsyncSession, data_id: int):
     try:

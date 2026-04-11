@@ -1,9 +1,8 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from schemas.ai_predict import AIPredictData
-from models.user_health import create_user_health
-from models.history import create_history
-from config.ai_config import DOUBAO_MODEL, PREDICTION_SYSTEM_PROMPT, get_client
+from schemas import AIPredictData
+from models import create_user_health, create_history
+from config import DOUBAO_MODEL, PREDICTION_SYSTEM_PROMPT, get_client
 
 SYSTEM_PROMPT = PREDICTION_SYSTEM_PROMPT
 

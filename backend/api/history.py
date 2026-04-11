@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from models.db_conn import get_db
-from service.history_service import user_history_list
-from service.history_service import query_historical_results
-from service.history_service import get_history_analysis
+from models import get_db
+from service import user_history_list
+from service import query_historical_results
+from service import get_history_analysis
 
 router = APIRouter(tags=["用户层接口"])
 

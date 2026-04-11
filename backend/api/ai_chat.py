@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from schemas.ai_chat import AIChatRequest
-from service.ai_chat_service import ai_chat_service
+from schemas import AIChatRequest
+from service import ai_chat_service
 
 router = APIRouter(tags=["用户层接口"])
 

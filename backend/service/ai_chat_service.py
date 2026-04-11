@@ -1,6 +1,6 @@
 from fastapi import HTTPException
-from schemas.ai_chat import AIChatRequest
-from config.ai_config import DOUBAO_MODEL, CHAT_SYSTEM_PROMPT, get_client
+from schemas import AIChatRequest
+from config import DOUBAO_MODEL, CHAT_SYSTEM_PROMPT, get_client
 
 SYSTEM_PROMPT = CHAT_SYSTEM_PROMPT
 
