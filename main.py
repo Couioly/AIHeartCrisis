@@ -70,4 +70,4 @@ async def root():
     return FileResponse("config/index.html")
 
 
-print("\033[1;31mdosc-site\thttps://heart-crisis.vip.cpolar.top/docs\033[0m")
+print("\033[1;31mdosc-site\thttp://localhost:8000/docs\033[0m")
