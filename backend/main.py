@@ -45,20 +45,20 @@ async def global_exception_handler(request: Request, exc: Exception):
 # 启动应用时建表
 async def create_tables():
     try:
-        from models import async_engine, Base
+        from models import async_engine, Base, User, History, TestData, Questionnaire
         async with async_engine.begin() as conn:
-            # 此处自动创建数据表会报错，采用手动创建
+            # 此处自动创建数据表, 执行前提需导入创建的表对象
             await conn.run_sync(Base.metadata.create_all)
 
             # 手动创建
-            # from models.user import User
-            # from models.user_health import UserHealth
-            # from models.history import History
-            # from models.test_data import TestData
+            # from models import User
+            # from models import History
+            # from models import TestData
+            # from models import Questionnaire
+            # await conn.run_sync(Base.metadata.tables["questionnaires"].create)
             # await conn.run_sync(Base.metadata.tables["test_data"].create)
             # await conn.run_sync(Base.metadata.tables["history"].create)
             # await conn.run_sync(Base.metadata.tables["user"].create)
-            # await conn.run_sync(Base.metadata.tables["user_health"].create)
 
     except Exception as e:
         print(f"[ERROR] 创建表失败: {str(e)}")
@@ -72,6 +72,6 @@ async def startup_event():
 async def root():
     return FileResponse("config/index.html")
 
-if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-    print("\033[1;31mdosc-site\thttp://localhost:8000/docs\033[0m")
+print("\033[1;31m\ndocs-site\thttp://localhost:8000/docs\nredoc-site\thttp://localhost:8000/redoc\nindex-site\thttp://localhost:8000\n\033[0m")
+
+# uvicorn.run(app, host="0.0.0.0", port=8000)

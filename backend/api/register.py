@@ -4,7 +4,7 @@ from models import get_db
 from schemas import UserCreate
 from service import user_register
 
-router = APIRouter(tags=["系统层接口"])
+router = APIRouter(tags=["用户层接口"])
 
 @router.post("/register", summary="用户注册")
 async def register(

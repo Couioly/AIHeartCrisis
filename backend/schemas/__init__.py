@@ -1,17 +1,29 @@
 from .user import UserLogin, UserCreate
-from .user_health import UserHealthCreate
 from .ai_chat import AIChatMessage, AIChatRequest, AIChatResponse
 from .ai_predict import AIPredictData
 from .news import NewsArticle, NewsResponse
+from .questionnaire import (
+    BasicInfo, AnswerItem, HealthData, WearableData,
+    QuestionnaireSubmit, QuestionnaireResponse,
+    QuestionnaireItem, QuestionnaireListResponse, QuestionnaireDetailResponse
+)
 
 __all__ = [
     'UserLogin',
     'UserCreate',
-    'UserHealthCreate',
     'AIChatMessage',
     'AIChatRequest',
     'AIChatResponse',
     'AIPredictData',
     'NewsArticle',
     'NewsResponse',
+    'BasicInfo',
+    'AnswerItem',
+    'HealthData',
+    'WearableData',
+    'QuestionnaireSubmit',
+    'QuestionnaireResponse',
+    'QuestionnaireItem',
+    'QuestionnaireListResponse',
+    'QuestionnaireDetailResponse',
 ]

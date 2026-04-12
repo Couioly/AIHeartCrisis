@@ -24,8 +24,8 @@ sql_logger.addHandler(file_handler)
 # 创建异步引擎
 async_engine = create_async_engine(
     ASYNC_DATABASE_URL,
-    # echo=True, # 打印SQL日志
-    echo=False,
+    echo=True, # 打印SQL日志
+    # echo=False,
     pool_size=10,
     max_overflow=20
 )

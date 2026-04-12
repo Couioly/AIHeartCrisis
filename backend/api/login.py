@@ -4,7 +4,7 @@ from models import get_db
 from schemas import UserLogin
 from service import user_login
 
-router = APIRouter(tags=["系统层接口"])
+router = APIRouter(tags=["用户层接口"])
 
 @router.post("/login", summary="用户登录")
 async def login(

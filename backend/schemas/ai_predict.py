@@ -1,27 +1,22 @@
 from pydantic import BaseModel
-from models.test_data import YesNo, SexEnum
+from typing import List, Dict, Any, Optional
 
 
 class AIPredictData(BaseModel):
     # 来源：用户数据 + 测试数据
     username: str = "admin"  # 测试数据自动变成 admin
+    questionnaire_id: int | None = None  # 关联的问卷ID
 
-    # 模型需要的全部字段（完全统一）
-    heart_disease: YesNo
-    bmi: float | None
-    smoking: YesNo
-    alcohol_drinking: YesNo
-    stroke: YesNo
-    physical_health: int | None
-    mental_health: int | None
-    diff_walking: YesNo
-    sex: SexEnum
-    age_category: str
-    race: str
-    diabetic: str
-    physical_activity: YesNo
-    gen_health: str
-    sleep_time: int | None
-    asthma: YesNo
-    kidney_disease: YesNo
-    skin_cancer: YesNo
+    # 问卷调查的字段格式
+    age: str | None = None
+    gender: str | None = None
+    occupation: str | None = None
+    education: str | None = None
+    answers: List[Dict[str, Any]] | None = None
+    blood_pressure: str | None = None
+    blood_lipids: str | None = None
+    blood_sugar: float | None = None
+    bmi: float | None = None
+    ecg: str | None = None
+    heart_rate: int | None = None
+    blood_oxygen: int | None = None

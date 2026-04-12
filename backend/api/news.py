@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from service import news_service
 
-router = APIRouter(tags=["用户层接口"])
+router = APIRouter(tags=["系统层接口"])
 
 
 @router.get("/news", summary="获取健康新闻资讯")

@@ -19,41 +19,47 @@ PREDICTION_SYSTEM_PROMPT = \
 
 【输入数据格式】
 用户健康数据包括：
-- username: 用户名
-- age_category: 年龄类别（数值）
-- sex: 性别（Male/Female）
+- age: 年龄范围
+- gender: 性别
+- occupation: 职业类别
+- education: 最高学历
+- answers: 问卷回答（JSON格式）
+- blood_pressure: 血压
+- blood_lipids: 血脂
+- blood_sugar: 血糖
 - bmi: 体重指数
-- smoking: 是否吸烟（Yes/No）
-- alcohol_drinking: 是否饮酒（Yes/No）
-- stroke: 是否有中风史（Yes/No）
-- physical_health: 身体不适天数（0-30天）
-- mental_health: 心理不适天数（0-30天）
-- diff_walking: 是否有行走困难（Yes/No）
-- race: 种族（str）
-- diabetic: 是否有糖尿病（Yes/No）
-- physical_activity: 是否有体育活动（Yes/No）
-- gen_health: 一般健康状况（str）
-- sleep_time: 睡眠时间（小时）
-- asthma: 是否有哮喘（Yes/No）
-- kidney_disease: 是否有肾病（Yes/No）
-- skin_cancer: 是否有皮肤癌（Yes/No）
+- ecg: 心电图
+- heart_rate: 心率
+- blood_oxygen: 血氧
 
 【输出格式要求】
-请以JSON格式输出以下内容：
+请以JSON格式输出以下内容，确保格式与示例完全一致：
 {
-  "risk_percent": "风险百分比（保留两位小数）",
-  "risk_level": "风险等级（低风险/中等风险/高风险）",
-  "analysis": "详细分析",
-  "suggestions": "健康建议"
+  "AI大模型PKL预测发病概率": [
+    {"冠状动脉粥样硬化性心脏病": 0.56},
+    {"心力衰竭": 0.43},
+    {"心律失常": 0.62},
+    {"高血压性心脏病": 0.01},
+    {"心肌炎": 0.005}
+  ],
+  "AI大模型分析": {
+    "风险等级": "情绪耗竭型",
+    "高概率疾病": ["冠状动脉粥样硬化性心脏病", "心力衰竭", "心律失常", ...],
+    "病情依据": "根据您的(此处填写问卷相关信息)以及...预测您可能患有...,您的(此处填写问卷相关信息)高于/低于（权威机构数据）...",
+    "建议": "根据您的(此处填写问卷相关信息)以及...，建议您..."
+  }
 }
 
 【评估标准】
-- 低风险：0-25%
-- 中等风险：25-50%
-- 高风险：50%以上
+- 高压过载型 85-100
+- 情绪耗竭型 70-85
+- 隐匿透支型 50-70
+- 基础病变型 >90
+- 低分险稳定型 <50
 
 请基于用户提供的数据，结合医学知识，给出准确的风险评估和实用的健康建议。
 """
+
 
 # ===================== 聊天服务配置 =====================
 CDC_KNOWLEDGE_BASE = \

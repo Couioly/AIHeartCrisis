@@ -8,6 +8,7 @@ from .ai_predict import router as ai_predict_router
 from .ai_chat import router as ai_chat_router
 from .news import router as news_router
 from .proxy import router as proxy_router
+from .questionnaire import router as questionnaire_router
 
 api_router = APIRouter()
 
@@ -20,5 +21,6 @@ api_router.include_router(ai_predict_router, prefix="/api")
 api_router.include_router(ai_chat_router, prefix="/api/ai")
 api_router.include_router(news_router, prefix="/api")
 api_router.include_router(proxy_router, prefix="/api")
+api_router.include_router(questionnaire_router, prefix="/api")
 
 __all__ = ['api_router']

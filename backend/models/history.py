@@ -1,14 +1,22 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import ForeignKey, Text
-from models.base import Base
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON
+from .base import Base
 
-# 定义历史记录表模型类
+
 class History(Base):
+    """分析结果表"""
     __tablename__ = "history"
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, comment="历史记录ID")
-    user_health_id: Mapped[int] = mapped_column(ForeignKey("user_health.id"), comment="关联用户健康记录ID")
-    result: Mapped[str] = mapped_column(Text, comment="AI分析结果")
+    
+    id = Column(Integer, primary_key=True, index=True, comment="分析结果ID")
+    questionnaire_id = Column(Integer, ForeignKey("questionnaires.id"), comment="关联问卷ID")
+    username = Column(String(50), index=True, nullable=False, comment="用户名")
+    prediction_time = Column(DateTime, nullable=False, comment="预测时间")
+    
+    # AI分析结果（JSON格式）
+    disease_probabilities = Column(JSON, nullable=False, comment="疾病概率")
+    risk_level = Column(String(50), comment="风险等级")
+    high_probability_diseases = Column(JSON, comment="高概率疾病")
+    diagnosis_basis = Column(String(500), comment="病情依据")
+    recommendations = Column(String(500), comment="建议")
 
 
 async def create_history(db, data):

@@ -4,7 +4,7 @@ from models import get_db
 from schemas import AIPredictData
 from service import heart_disease_predict
 
-router = APIRouter(tags=["用户层接口"])
+router = APIRouter(tags=["问卷调查"])
 
 @router.post("/ai-predict", summary="AI心脏病风险预测")
 async def ai_predict(
