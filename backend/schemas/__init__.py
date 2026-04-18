@@ -7,6 +7,11 @@ from .questionnaire import (
     QuestionnaireSubmit, QuestionnaireResponse,
     QuestionnaireItem, QuestionnaireListResponse, QuestionnaireDetailResponse
 )
+from .medical_report import (
+    MedicalReportSaveRequest, 
+    MedicalReportUploadResponse, 
+    MedicalReportSaveResponse
+)
 
 __all__ = [
     'UserLogin',
@@ -26,4 +31,7 @@ __all__ = [
     'QuestionnaireItem',
     'QuestionnaireListResponse',
     'QuestionnaireDetailResponse',
+    'MedicalReportSaveRequest',
+    'MedicalReportUploadResponse',
+    'MedicalReportSaveResponse',
 ]

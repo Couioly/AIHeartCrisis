@@ -31,6 +31,14 @@ async def heart_disease_predict(db: AsyncSession, data: AIPredictData):
             - blood_oxygen: {input_dict.get('blood_oxygen', 'None')}
             """
         
+        # 添加体检报告AI预测结果
+        medical_report_ai_result = input_dict.get('medical_report_ai_result')
+        if medical_report_ai_result:
+            user_data_prompt += f"""
+            【体检报告AI预测结果】（重要参考，请优先考虑）：
+            {str(medical_report_ai_result)}
+            """
+        
         # 3. 调用Doubao模型
         client = get_client()
         
@@ -73,10 +81,22 @@ async def heart_disease_predict(db: AsyncSession, data: AIPredictData):
             
             # 验证分析数据中的必需字段
             analysis_data = prediction_data.get("AI大模型分析", {})
+            if analysis_data.get("综合风险分数") is None:
+                raise ValueError("缺少综合风险分数")
             if not analysis_data.get("风险等级"):
                 raise ValueError("缺少风险等级信息")
             if not analysis_data.get("建议"):
                 raise ValueError("缺少建议信息")
+            
+            # 可选字段：图表数据（如果不存在，设置为默认值）
+            if "雷达图数据" not in prediction_data:
+                prediction_data["雷达图数据"] = {"labels": [], "values": []}
+            if "柱状图数据" not in prediction_data:
+                prediction_data["柱状图数据"] = []
+            if "健康仪表盘数据" not in prediction_data:
+                prediction_data["健康仪表盘数据"] = {}
+            if "数据来源" not in prediction_data:
+                prediction_data["数据来源"] = ["问卷数据"]
                 
         except (json.JSONDecodeError, ValueError) as e:
             # 记录错误日志用于调试
@@ -108,7 +128,8 @@ async def heart_disease_predict(db: AsyncSession, data: AIPredictData):
             "risk_level": prediction_data.get("AI大模型分析", {}).get("风险等级", "未知"),
             "high_probability_diseases": prediction_data.get("AI大模型分析", {}).get("高概率疾病", []),
             "diagnosis_basis": prediction_data.get("AI大模型分析", {}).get("病情依据", ""),
-            "recommendations": prediction_data.get("AI大模型分析", {}).get("建议", "")
+            "recommendations": prediction_data.get("AI大模型分析", {}).get("建议", ""),
+            "full_prediction_result": prediction_data
         }
         await create_history(db, history_data)
         

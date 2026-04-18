@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from models import Questionnaire, User
+from models import Questionnaire, User, MedicalReport
 from fastapi import HTTPException, status
 from schemas import QuestionnaireItem, QuestionnaireDetailResponse, QuestionnaireListResponse, QuestionnaireSubmit, QuestionnaireResponse, AIPredictData
 from .ai_predict_service import heart_disease_predict
@@ -103,6 +103,19 @@ async def get_questionnaire_detail(db: AsyncSession, questionnaire_id: int):
 async def submit_questionnaire(db: AsyncSession, data: QuestionnaireSubmit):
     """提交问卷"""
     try:
+        # 校验用户是否存在
+        user_result = await db.execute(
+            select(User).where(User.username == data.username)
+        )
+        user = user_result.scalars().first()
+        
+        if not user:
+            return QuestionnaireResponse(
+                success=False,
+                message="用户不存在",
+                errors=["用户名不存在，请先注册"]
+            )
+        
         # 构建问卷数据
         questionnaire_data = {
             "username": data.username,
@@ -146,6 +159,21 @@ async def submit_questionnaire(db: AsyncSession, data: QuestionnaireSubmit):
         
         # 调用AI大模型接口进行分析
         try:
+            # 查询用户最新的体检报告
+            medical_report_ai_result = None
+            try:
+                mr_result = await db.execute(
+                    select(MedicalReport)
+                    .where(MedicalReport.username == data.username)
+                    .order_by(MedicalReport.id.desc())
+                    .limit(1)
+                )
+                latest_medical_report = mr_result.scalars().first()
+                if latest_medical_report and latest_medical_report.ai_report_result:
+                    medical_report_ai_result = latest_medical_report.ai_report_result
+            except Exception as mr_error:
+                print(f"查询体检报告失败: {mr_error}")
+            
             # 构建AI预测数据
             ai_predict_data = AIPredictData(
                 username=data.username,
@@ -161,7 +189,8 @@ async def submit_questionnaire(db: AsyncSession, data: QuestionnaireSubmit):
                 bmi=data.health_data.bmi if data.health_data else None,
                 ecg=data.health_data.ecg if data.health_data else None,
                 heart_rate=data.wearable_data.heart_rate if data.wearable_data else None,
-                blood_oxygen=data.wearable_data.blood_oxygen if data.wearable_data else None
+                blood_oxygen=data.wearable_data.blood_oxygen if data.wearable_data else None,
+                medical_report_ai_result=medical_report_ai_result
             )
             
             # 调用AI预测服务

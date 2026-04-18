@@ -20,3 +20,6 @@ class AIPredictData(BaseModel):
     ecg: str | None = None
     heart_rate: int | None = None
     blood_oxygen: int | None = None
+    
+    # 体检报告的AI预测结果
+    medical_report_ai_result: Dict[str, Any] | None = None

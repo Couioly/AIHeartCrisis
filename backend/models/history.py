@@ -17,6 +17,9 @@ class History(Base):
     high_probability_diseases = Column(JSON, comment="高概率疾病")
     diagnosis_basis = Column(String(500), comment="病情依据")
     recommendations = Column(String(500), comment="建议")
+    
+    # 完整预测结果（包含图表数据）
+    full_prediction_result = Column(JSON, comment="完整预测结果")
 
 
 async def create_history(db, data):

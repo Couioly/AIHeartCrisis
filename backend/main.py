@@ -45,7 +45,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 # 启动应用时建表
 async def create_tables():
     try:
-        from models import async_engine, Base, User, History, TestData, Questionnaire
+        from models import async_engine, Base, User, History, TestData, Questionnaire, MedicalReport
         async with async_engine.begin() as conn:
             # 此处自动创建数据表, 执行前提需导入创建的表对象
             await conn.run_sync(Base.metadata.create_all)
@@ -55,6 +55,8 @@ async def create_tables():
             # from models import History
             # from models import TestData
             # from models import Questionnaire
+            # from models import MedicalReport
+            # await conn.run_sync(Base.metadata.tables["medical_report"].create)
             # await conn.run_sync(Base.metadata.tables["questionnaires"].create)
             # await conn.run_sync(Base.metadata.tables["test_data"].create)
             # await conn.run_sync(Base.metadata.tables["history"].create)
