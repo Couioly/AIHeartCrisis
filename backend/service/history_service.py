@@ -46,6 +46,7 @@ async def query_historical_results(db: AsyncSession, username: str):
                     "high_probability_diseases": record.high_probability_diseases,
                     "diagnosis_basis": record.diagnosis_basis,
                     "recommendations": record.recommendations,
+                    "full_prediction_result": record.full_prediction_result,
                     "created_at": record.created_at
                 }
                 for record in history_records
@@ -87,6 +88,10 @@ async def get_history_analysis(db: AsyncSession, questionnaire_id: int):
                 "建议": history_record.recommendations
             }
         }
+        
+        # 添加完整预测结果（包含图表数据）
+        if history_record.full_prediction_result:
+            result_data["full_prediction_result"] = history_record.full_prediction_result
 
         # 返回分析结果
         return {
