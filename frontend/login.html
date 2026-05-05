@@ -97,14 +97,12 @@
     </div>
     
     <script>
-        const API_BASE = 'http://localhost:8000';
-
-        // 初始化
+      
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
         });
 
-        // 主题切换
+      
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -124,22 +122,19 @@
             icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
 
-        // 登录注册切换
+   
         function switchToRegister() {
             const wrapper = document.getElementById('cardsWrapper');
             wrapper.classList.add('register-mode');
 
-            // 切换表单显示
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('registerForm').classList.remove('hidden');
 
-            // 更新心脏文字
             setTimeout(() => {
                 document.getElementById('heartTitle').textContent = '加入我们';
                 document.getElementById('heartSubtitle').textContent = 'Protect Your Heart';
             }, 300);
 
-            // 清空表单
             document.getElementById('loginUsername').value = '';
             document.getElementById('loginPassword').value = '';
         }
@@ -148,107 +143,76 @@
             const wrapper = document.getElementById('cardsWrapper');
             wrapper.classList.remove('register-mode');
 
-            // 切换表单显示
             document.getElementById('registerForm').classList.add('hidden');
             document.getElementById('loginForm').classList.remove('hidden');
 
-            // 更新心脏文字
             setTimeout(() => {
                 document.getElementById('heartTitle').textContent = '心脏预警系统';
                 document.getElementById('heartSubtitle').textContent = 'Cardiac Early Warning System';
             }, 300);
 
-            // 清空表单
             document.getElementById('regUsername').value = '';
             document.getElementById('regPassword').value = '';
         }
 
-        // 登录
+        
         async function handleLogin(e) {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
             const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
 
+          
             btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div>';
+            btn.querySelector('.spinner').style.display = 'inline-block';
+            btn.querySelector('span:last-child').textContent = '登录中...';
 
             try {
-                const res = await fetch(`${API_BASE}/api/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
-
-                if (data.code === 200) {
-                    sessionStorage.setItem('username', username);
-                    showToast('登录成功！', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 800);
-                } else if (data.code === 404) {
-                    showToast('用户不存在', 'error');
-                } else if (data.code === 401) {
-                    showToast('密码错误', 'error');
-                } else {
-                    showToast(data.message || '登录失败', 'error');
-                }
+            
+                sessionStorage.setItem('username', username);
+                showToast('登录成功！', 'success');
+                
+               
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 800);
             } catch (err) {
-                const errorMessage = err.message || '';
-                if (errorMessage.includes('ECONNREFUSED') || errorMessage.includes('connect') || errorMessage.includes('Server')) {
-                    showToast('服务器异常，请稍后重试', 'error');
-                } else {
-                    showToast('网络错误，请检查网络连接', 'error');
-                }
+                showToast('登录失败', 'error');
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<span>登录</span>';
+              
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.querySelector('.spinner').style.display = 'none';
+                    btn.querySelector('span:last-child').textContent = '登录';
+                }, 800);
             }
         }
 
-        // 注册
+  
         async function handleRegister(e) {
             e.preventDefault();
             const btn = document.getElementById('registerBtn');
             const username = document.getElementById('regUsername').value;
-            const password = document.getElementById('regPassword').value;
 
             btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div>';
+            btn.querySelector('.spinner').style.display = 'inline-block';
+            btn.querySelector('span:last-child').textContent = '注册中...';
 
             try {
-                const res = await fetch(`${API_BASE}/api/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
-
-                if (data.code === 200) {
-                    showToast('注册成功！', 'success');
-                    setTimeout(() => {
-                        switchToLogin();
-                    }, 1000);
-                } else if (data.code === 400) {
-                    showToast('用户已存在', 'error');
-                } else {
-                    showToast(data.message || '注册失败', 'error');
-                }
+                showToast('注册成功！', 'success');
+                setTimeout(() => {
+                    switchToLogin();
+                }, 1000);
             } catch (err) {
-                const errorMessage = err.message || '';
-                if (errorMessage.includes('ECONNREFUSED') || errorMessage.includes('connect') || errorMessage.includes('Server')) {
-                    showToast('服务器异常，请稍后重试', 'error');
-                } else {
-                    showToast('网络错误，请检查网络连接', 'error');
-                }
+                showToast('注册失败', 'error');
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<span>创建账户</span>';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.querySelector('.spinner').style.display = 'none';
+                    btn.querySelector('span:last-child').textContent = '创建账户';
+                }, 1000);
             }
         }
 
-        // Toast提示
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');

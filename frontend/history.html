@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史问卷报告 - 心脏健康评估</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+:root {
+    --body-bg: #000;
+    --card-bg: #111;
+    --text-primary: #fff;
+    --text-secondary: #eee;
+    --input-bg: #222;
+    --border-color: #ff0000;
+    --hover-bg: #333;
+}
+html[data-theme="light"] {
+    --body-bg: #fff;
+    --card-bg: #f9f9f9;
+    --text-primary: #000;
+    --text-secondary: #333;
+    --input-bg: #f5f5f9;
+    --border-color: #ff0000;
+    --hover-bg: #ffe5e5;
+}
+body {
+    background-color: var(--body-bg);
+    color: var(--text-primary);
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.7;
+    transition: all 0.3s ease;
+}
+.theme-toggle {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+.back-group {
+    max-width: 1000px;
+    margin: 0 auto 20px;
+    display: flex;
+    gap: 12px;
+}
+.back-group button {
+    background: #ff0000;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.page-title {
+    font-size: 34px;
+    text-align: center;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-weight: bold;
+}
+.page-desc {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    font-size: 18px;
+}
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.history-item {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-left: 6px solid #ff0000;
+    transition: 0.2s;
+}
+.history-item:hover {
+    transform: translateY(-3px);
+}
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.history-date {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+.risk-tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+}
+.risk-high { background: #e74c3c; }
+.risk-middle { background: #f39c12; }
+.risk-low { background: #27ae60; }
+.history-simple {
+    color: var(--text-secondary);
+    font-size: 17px;
+    margin-bottom: 16px;
+}
+.disease-high {
+    color: #ff0000;
+    font-weight: bold;
+}
+.history-btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-view {
+    background: #ff0000;
+    color: #fff;
+}
+.btn-view:hover {
+    background: #cc0000;
+}
+.btn-del {
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+.btn-del:hover {
+    background: #444;
+}
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+    font-size: 20px;
+}
+    </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">
+    <i class="fas fa-moon" id="themeIcon"></i>
+</button>
+
+<div class="back-group">
+    <button onclick="window.location.href='index.html'">← 返回首页</button>
+    <button onclick="window.location.href='survey.html'">前往问卷</button>
+</div>
+
+<div class="container">
+    <h2 class="page-title">📋 历史问卷评估报告</h2>
+    <div class="page-desc">查看你所有的心脏健康评估记录，追踪健康变化</div>
+    <div class="history-list" id="historyList"></div>
+    <div class="empty" id="emptyTip" style="display:none;">暂无历史问卷记录，快去完成一次评估吧！</div>
+</div>
+
+<script>
+ 
+    function initTheme() {
+        const html = document.documentElement;
+        const icon = document.getElementById('themeIcon');
+        const saved = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', saved);
+        if (saved === 'light') {
+            icon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
+        }
+    }
+
+    function toggleTheme() {
+        const html = document.documentElement;
+        const icon = document.getElementById('themeIcon');
+        let current = html.getAttribute('data-theme');
+        let next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        if (next === 'light') {
+            icon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
+        }
+    }
+
+  
+    const mockHistory = [
+        {id:1, date:"2025-12-20 14:30", riskLevel:"高风险", highDisease:["高血压","心力衰竭","心血管疾病"], simple:"工作强度极高、长期熬夜、久坐、有胸闷心悸症状，存在多项高危因素"},
+        {id:2, date:"2025-12-15 10:15", riskLevel:"中风险", highDisease:["冠心病","心血管疾病"], simple:"压力较大、睡眠一般、偶尔心脏不适，建议改善作息并加强运动"},
+        {id:3, date:"2025-12-10 09:20", riskLevel:"低风险", highDisease:["无"], simple:"作息规律、运动充足、无明显症状，心脏健康状况良好"}
+    ];
+
+    function renderHistory() {
+        const list = document.getElementById('historyList');
+        const empty = document.getElementById('emptyTip');
+        if (!mockHistory.length) { empty.style.display='block'; list.innerHTML=''; return; }
+        empty.style.display='none';
+        let html = '';
+        mockHistory.forEach(item => {
+            let riskCls = item.riskLevel=='高风险'?'risk-high':item.riskLevel=='中风险'?'risk-middle':'risk-low';
+            let disease = item.highDisease.join('、');
+            html += `
+            <div class="history-item">
+                <div class="history-header">
+                    <div class="history-date">${item.date}</div>
+                    <div class="risk-tag ${riskCls}">${item.riskLevel}</div>
+                </div>
+                <div class="history-simple">高概率疾病：<span class="disease-high">${disease}</span><br>${item.simple}</div>
+                <div class="history-btns">
+                    <button class="btn btn-view" onclick="viewReport(${item.id})">查看详情</button>
+                    <button class="btn btn-del" onclick="deleteReport(${item.id})">删除记录</button>
+                </div>
+            </div>`;
+        });
+        list.innerHTML = html;
+    }
+
+    function viewReport(id) { alert('打开第 '+id+' 份报告'); }
+    function deleteReport(id) { if(confirm('确定删除？')){ alert('已删除'); renderHistory(); } }
+
+    window.onload = function() {
+        initTheme();
+        renderHistory();
+    };
+</script>
+</body>
+</html>

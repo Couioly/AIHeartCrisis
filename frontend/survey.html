@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心脏过劳风险评估问卷</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+:root {
+    --body-bg: #000;
+    --card-bg: #111;
+    --text-primary: #fff;
+    --text-secondary: #eee;
+    --input-bg: #222;
+    --border-color: #ff0000;
+    --hover-bg: #333;
+}
+html[data-theme="light"] {
+    --body-bg: #fff;
+    --card-bg: #f9f9f9;
+    --text-primary: #000;
+    --text-secondary: #333;
+    --input-bg: #f5f5f5;
+    --border-color: #ff0000;
+    --hover-bg: #ffe5e5;
+}
+body {
+    background-color: var(--body-bg);
+    color: var(--text-primary);
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.7;
+    transition: all 0.3s ease;
+}
+.theme-toggle {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+.back-home {
+    max-width: 1000px;
+    margin: 0 auto 20px;
+}
+.back-home button {
+    background: #ff0000;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.survey-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.survey-container {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 50px 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.survey-title {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+    font-weight: bold;
+}
+.survey-desc {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 50px;
+    font-size: 20px;
+}
+.section {
+    margin-bottom: 70px;
+}
+.section-title {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    color: #ff0000;
+    margin-bottom: 40px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ff0000;
+    display: block;
+}
+.question {
+    margin-bottom: 40px;
+}
+.q-title {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    display: block;
+    line-height: 1.6;
+}
+.q-mark {
+    color: #ff0000;
+    font-weight: bold;
+}
+.options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 10px;
+}
+.option {
+    display: inline-flex;
+    align-items: center;
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    padding: 18px 28px;
+    border-radius: 10px;
+    font-size: 21px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: 0.2s;
+}
+.option:hover {
+    border-color: #ff0000;
+    background: var(--hover-bg);
+}
+.option input {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+}
+.survey-input {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px 20px;
+    color: var(--text-primary);
+    font-size: 20px;
+    width: 240px;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+.inline-fields {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 20px;
+}
+.btn-submit-survey {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: 70px auto 0;
+    padding: 22px;
+    background: #ff0000;
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-submit-survey:hover {
+    background: #cc0000;
+}
+.report-container {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 20px;
+    margin-top: 30px;
+    display: none;
+}
+.report-title {
+    font-size: 32px;
+    text-align: center;
+    color: #ff0000;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+.prob-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+}
+.prob-item {
+    background: var(--input-bg);
+    padding: 20px 30px;
+    border-radius: 12px;
+    font-size: 20px;
+    min-width: 200px;
+    text-align: center;
+}
+.disease-name {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.prob-value {
+    color: #ff0000;
+    font-size: 24px;
+    font-weight: bold;
+}
+.risk-level {
+    text-align: center;
+    font-size: 26px;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(255,0,0,0.2);
+    border-radius: 10px;
+}
+.block {
+    margin: 25px 0;
+    line-height: 1.8;
+}
+.block h3 {
+    color: #ff0000;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+.block p {
+    font-size: 20px;
+    color: var(--text-secondary);
+}
+.high-disease {
+    color: #f39c12;
+    font-weight: bold;
+}
+    </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">
+    <i class="fas fa-moon" id="themeIcon"></i>
+</button>
+
+    <div class="back-home">
+        <button onclick="window.location.href='index.html'">← 返回首页</button>
+    </div>
+
+    <div class="survey-wrapper">
+        <div class="survey-container" id="surveyPage">
+            <h2 class="survey-title">心脏过劳风险评估问卷</h2>
+            <div class="survey-desc">
+                本问卷共30题，约4-5分钟完成<br>
+                请根据真实情况选择最符合你的一项<br>
+                <span class="q-mark">*</span> 为AI模型核心特征（必答）
+            </div>
+
+            <form id="surveyForm">
+                <!-- 第一部分 -->
+                <div class="section">
+                    <div class="section-title">第一部分：基本信息</div>
+                    <div class="question">
+                        <div class="q-title">1. 您的年龄：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="age" value="18-25" required> 18-25岁</label>
+                            <label class="option"><input type="radio" name="age" value="26-35"> 26-35岁</label>
+                            <label class="option"><input type="radio" name="age" value="36-45"> 36-45岁</label>
+                            <label class="option"><input type="radio" name="age" value="46-55"> 46-55岁</label>
+                            <label class="option"><input type="radio" name="age" value="56+"> 56岁以上</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title">2. 您的性别：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="gender" value="男" required> 男</label>
+                            <label class="option"><input type="radio" name="gender" value="女"> 女</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title">3. 您的职业类别：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="job" value="互联网"> 互联网/IT/程序员</label>
+                            <label class="option"><input type="radio" name="job" value="金融"> 金融/保险/证券</label>
+                            <label class="option"><input type="radio" name="job" value="医疗"> 医疗/医护</label>
+                            <label class="option"><input type="radio" name="job" value="教育"> 教育/科研</label>
+                            <label class="option"><input type="radio" name="job" value="制造"> 制造业/工厂</label>
+                            <label class="option"><input type="radio" name="job" value="交通"> 交通运输/物流</label>
+                            <label class="option"><input type="radio" name="job" value="销售"> 销售/市场/广告</label>
+                            <label class="option"><input type="radio" name="job" value="公务员"> 公务员/事业单位</label>
+                            <label class="option"><input type="radio" name="job" value="自由职业"> 自由职业/创业</label>
+                            <label class="option"><input type="radio" name="job" value="学生"> 学生</label>
+                            <label class="option"><input type="radio" name="job" value="退休"> 退休</label>
+                            <label class="option"><input type="radio" name="job" value="other"> 其他：<input type="text" class="survey-input" name="job_other"></label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title">4. 您的最高学历：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="edu" value="高中及以下"> 高中及以下</label>
+                            <label class="option"><input type="radio" name="edu" value="大专"> 大专</label>
+                            <label class="option"><input type="radio" name="edu" value="本科"> 本科</label>
+                            <label class="option"><input type="radio" name="edu" value="硕士"> 硕士</label>
+                            <label class="option"><input type="radio" name="edu" value="博士及以上"> 博士及以上</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">第二部分：工作强度与过劳特征</div>
+                    <div class="question">
+                        <div class="q-title">5. 您目前的工作模式：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="work_mode" value="标准8小时"> 标准模式（每日8小时，双休）</label>
+                            <label class="option"><input type="radio" name="work_mode" value="弹性"> 弹性工作制（任务制，偶尔加班）</label>
+                            <label class="option"><input type="radio" name="work_mode" value="996"> 996模式（早9晚9，每周6天）</label>
+                            <label class="option"><input type="radio" name="work_mode" value="007"> 007/随时待命</label>
+                            <label class="option"><input type="radio" name="work_mode" value="倒班"> 倒班/夜班模式</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 6. 近3个月平均工作时长：</div>
+                        <div class="inline-fields">
+                            <div>平均每天工作：<input type="number" class="survey-input" name="work_hour_day" min="1" max="24" placeholder="1-24小时" required></div>
+                            <div>平均每周工作：<input type="number" class="survey-input" name="work_day_week" min="1" max="7" placeholder="1-7天" required></div>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 7. 您的工作环境及久坐情况：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="sit" value=">8h" required> 每天久坐超过8小时</label>
+                            <label class="option"><input type="radio" name="sit" value="4-8h"> 每天久坐4-8小时</label>
+                            <label class="option"><input type="radio" name="sit" value="<4h"> 每天久坐少于4小时</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 8. 您认为自己的工作强度：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="work_intensity" value="极低" required> 极低强度（清闲）</label>
+                            <label class="option"><input type="radio" name="work_intensity" value="中等"> 中等强度（规律性忙碌）</label>
+                            <label class="option"><input type="radio" name="work_intensity" value="高"> 高强度（精神高度紧张）</label>
+                            <label class="option"><input type="radio" name="work_intensity" value="极高"> 极高强度（持续性高压）</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 9. 您的通勤情况：</div>
+                        <div class="inline-fields">
+                            <div>每日往返通勤：<input type="number" class="survey-input" name="commute_hour" min="1" max="24" placeholder="1-24小时" required></div>
+                        </div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="commute_type" value="开车" required> 开车/打车</label>
+                            <label class="option"><input type="radio" name="commute_type" value="公共交通"> 公共交通</label>
+                            <label class="option"><input type="radio" name="commute_type" value="步行骑行"> 步行/骑行</label>
+                            <label class="option"><input type="radio" name="commute_type" value="混合"> 混合方式</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">第三部分：职业倦怠与心理压力</div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 10. 近3个月是否经常出现以下情绪：</div>
+                        <div class="options">
+                            <label class="option"><input type="checkbox" name="emotion" value="焦虑紧张"> 持续性焦虑或紧张</label>
+                            <label class="option"><input type="checkbox" name="emotion" value="低落易怒"> 情绪低落或易怒</label>
+                            <label class="option"><input type="checkbox" name="emotion" value="倦怠"> 对工作失去热情</label>
+                            <label class="option"><input type="checkbox" name="emotion" value="睡前想工作"> 睡前反复思考工作</label>
+                            <label class="option"><input type="checkbox" name="emotion" value="自我怀疑"> 自我怀疑</label>
+                            <label class="option"><input type="checkbox" name="emotion" value="无"> 无明显负面情绪</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 11. 工作支持程度：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="support" value="很高" required> 很高</label>
+                            <label class="option"><input type="radio" name="support" value="一般"> 一般</label>
+                            <label class="option"><input type="radio" name="support" value="较低"> 较低</label>
+                            <label class="option"><input type="radio" name="support" value="几乎没有"> 几乎没有</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 12. 近3个月精神压力评分（1-10）：</div>
+                        <input type="number" class="survey-input" name="stress_score" min="1" max="10" placeholder="1-10分" required>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 13. 任务紧急时生理反应：</div>
+                        <div class="options">
+                            <label class="option"><input type="checkbox" name="stress_react" value="心悸"> 心跳加快</label>
+                            <label class="option"><input type="checkbox" name="stress_react" value="胸闷"> 胸闷</label>
+                            <label class="option"><input type="checkbox" name="stress_react" value="手抖出汗"> 手抖出汗</label>
+                            <label class="option"><input type="checkbox" name="stress_react" value="胃部不适"> 胃部不适</label>
+                            <label class="option"><input type="checkbox" name="stress_react" value="头痛"> 头痛</label>
+                            <label class="option"><input type="checkbox" name="stress_react" value="无"> 无明显反应</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">第四部分：睡眠质量</div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 14. 睡眠质量：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="sleep_quality" value="非常好" required> 非常好</label>
+                            <label class="option"><input type="radio" name="sleep_quality" value="较好"> 较好</label>
+                            <label class="option"><input type="radio" name="sleep_quality" value="一般"> 一般</label>
+                            <label class="option"><input type="radio" name="sleep_quality" value="较差"> 较差</label>
+                            <label class="option"><input type="radio" name="sleep_quality" value="非常差"> 非常差</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 15. 失眠频率：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="insomnia_freq" value="每周≥3次" required> 每周3次以上</label>
+                            <label class="option"><input type="radio" name="insomnia_freq" value="每周1-2次"> 每周1-2次</label>
+                            <label class="option"><input type="radio" name="insomnia_freq" value="偶尔"> 偶尔</label>
+                            <label class="option"><input type="radio" name="insomnia_freq" value="从不"> 从不</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 16. 作息规律性：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="routine" value="非常规律" required> 非常规律</label>
+                            <label class="option"><input type="radio" name="routine" value="比较规律"> 比较规律</label>
+                            <label class="option"><input type="radio" name="routine" value="不太规律"> 不太规律</label>
+                            <label class="option"><input type="radio" name="routine" value="完全不规律"> 完全不规律</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 17. 午休习惯：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="noon_nap" value="每天20-30min" required> 每天午休</label>
+                            <label class="option"><input type="radio" name="noon_nap" value="偶尔"> 偶尔午休</label>
+                            <label class="option"><input type="radio" name="noon_nap" value="几乎没有"> 几乎没有</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">第五部分：躯体症状与预警信号</div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 18. 近3个月症状：</div>
+                        <div class="options">
+                            <label class="option"><input type="checkbox" name="symptom" value="心悸"> 心悸</label>
+                            <label class="option"><input type="checkbox" name="symptom" value="胸闷胸痛"> 胸闷胸痛</label>
+                            <label class="option"><input type="checkbox" name="symptom" value="活动后气短"> 活动后气短</label>
+                            <label class="option"><input type="checkbox" name="symptom" value="极度疲劳"> 不明疲劳</label>
+                            <label class="option"><input type="checkbox" name="symptom" value="眩晕"> 眩晕</label>
+                            <label class="option"><input type="checkbox" name="symptom" value="下肢水肿"> 下肢水肿</label>
+                            <label class="option"><input type="checkbox" name="symptom" value="肩背放射痛"> 肩背放射痛</label>
+                            <label class="option"><input type="checkbox" name="symptom" value="无"> 无</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 19. 短暂心脏不适：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="heart_discomfort" value="是，频率增加" required> 是，频率增加</label>
+                            <label class="option"><input type="radio" name="heart_discomfort" value="是，频率稳定"> 是，频率稳定</label>
+                            <label class="option"><input type="radio" name="heart_discomfort" value="否"> 否</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 20. 运动反应：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="sport_react" value="轻微即不适" required> 轻微运动即不适</label>
+                            <label class="option"><input type="radio" name="sport_react" value="恢复慢"> 恢复慢</label>
+                            <label class="option"><input type="radio" name="sport_react" value="无不适"> 无不适</label>
+                            <label class="option"><input type="radio" name="sport_react" value="不运动"> 几乎不运动</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">第六部分：家族史与既往病史</div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 21. 直系亲属疾病：</div>
+                        <div class="options">
+                            <label class="option"><input type="checkbox" name="family_history" value="高血压"> 高血压</label>
+                            <label class="option"><input type="checkbox" name="family_history" value="冠心病心梗"> 冠心病/心梗</label>
+                            <label class="option"><input type="checkbox" name="family_history" value="糖尿病"> 糖尿病</label>
+                            <label class="option"><input type="checkbox" name="family_history" value="高血脂"> 高血脂</label>
+                            <label class="option"><input type="checkbox" name="family_history" value="猝死"> 心脏猝死</label>
+                            <label class="option"><input type="checkbox" name="family_history" value="无"> 无</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 22. 本人确诊疾病：</div>
+                        <div class="options">
+                            <label class="option"><input type="checkbox" name="self_history" value="高血压"> 高血压</label>
+                            <label class="option"><input type="checkbox" name="self_history" value="心律失常"> 心律失常</label>
+                            <label class="option"><input type="checkbox" name="self_history" value="冠心病"> 冠心病</label>
+                            <label class="option"><input type="checkbox" name="self_history" value="心衰"> 心衰</label>
+                            <label class="option"><input type="checkbox" name="self_history" value="糖尿病"> 糖尿病</label>
+                            <label class="option"><input type="checkbox" name="self_history" value="高血脂"> 高血脂</label>
+                            <label class="option"><input type="checkbox" name="self_history" value="甲状腺"> 甲状腺疾病</label>
+                            <label class="option"><input type="checkbox" name="self_history" value="睡眠呼吸暂停"> 睡眠呼吸暂停</label>
+                            <label class="option"><input type="checkbox" name="self_history" value="无"> 无</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">第七部分：生活习惯</div>
+                    <div class="question">
+                        <div class="q-title">23. 饮食偏好：</div>
+                        <div class="options">
+                            <label class="option"><input type="checkbox" name="diet" value="高频外卖"> 高频外卖</label>
+                            <label class="option"><input type="checkbox" name="diet" value="高盐"> 高盐</label>
+                            <label class="option"><input type="checkbox" name="diet" value="高油"> 高油</label>
+                            <label class="option"><input type="checkbox" name="diet" value="高糖"> 高糖</label>
+                            <label class="option"><input type="checkbox" name="diet" value="蔬果不足"> 蔬果不足</label>
+                            <label class="option"><input type="checkbox" name="diet" value="规律营养"> 规律营养</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 24. 规律锻炼：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="sport" value="每周≥3次" required> 每周≥3次</label>
+                            <label class="option"><input type="radio" name="sport" value="每周1-2次"> 每周1-2次</label>
+                            <label class="option"><input type="radio" name="sport" value="几乎不"> 几乎不</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 25. 吸烟：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="smoke" value="从不" required> 从不</label>
+                            <label class="option"><input type="radio" name="smoke" value="已戒烟"> 已戒烟</label>
+                            <label class="option"><input type="radio" name="smoke" value="偶尔"> 偶尔</label>
+                            <label class="option"><input type="radio" name="smoke" value="每日1-10支"> 每日1-10支</label>
+                            <label class="option"><input type="radio" name="smoke" value="每日11-20支"> 每日11-20支</label>
+                            <label class="option"><input type="radio" name="smoke" value="每日>20支"> 每日20支以上</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 26. 饮酒：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="drink" value="从不" required> 从不</label>
+                            <label class="option"><input type="radio" name="drink" value="偶尔"> 偶尔</label>
+                            <label class="option"><input type="radio" name="drink" value="适度"> 适度</label>
+                            <label class="option"><input type="radio" name="drink" value="频繁"> 频繁</label>
+                            <label class="option"><input type="radio" name="drink" value="每日"> 每日</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title"><span class="q-mark">*</span> 27. 咖啡/功能饮料：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="caffeine" value="很少" required> 很少</label>
+                            <label class="option"><input type="radio" name="caffeine" value="偶尔"> 偶尔</label>
+                            <label class="option"><input type="radio" name="caffeine" value="每天1-2杯"> 每天1-2杯</label>
+                            <label class="option"><input type="radio" name="caffeine" value="每天≥3杯"> 每天3杯以上</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">第八部分：反馈</div>
+                    <div class="question">
+                        <div class="q-title">28. 了解加班与心脏风险：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="know_overwork" value="非常了解"> 非常了解</label>
+                            <label class="option"><input type="radio" name="know_overwork" value="听说过"> 听说过</label>
+                            <label class="option"><input type="radio" name="know_overwork" value="没听过"> 没听过</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title">29. 高风险可能原因：</div>
+                        <div class="options">
+                            <label class="option"><input type="checkbox" name="risk_reason" value="睡眠不足"> 睡眠不足</label>
+                            <label class="option"><input type="checkbox" name="risk_reason" value="压力过大"> 压力过大</label>
+                            <label class="option"><input type="checkbox" name="risk_reason" value="久坐不运动"> 久坐不运动</label>
+                            <label class="option"><input type="checkbox" name="risk_reason" value="饮食不健康"> 饮食不健康</label>
+                            <label class="option"><input type="checkbox" name="risk_reason" value="家族遗传"> 家族遗传</label>
+                            <label class="option"><input type="checkbox" name="risk_reason" value="已有症状"> 已有症状</label>
+                            <label class="option"><input type="checkbox" name="risk_reason" value="烟酒过量"> 烟酒过量</label>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="q-title">30. 是否愿意使用AI监测：</div>
+                        <div class="options">
+                            <label class="option"><input type="radio" name="use_ai" value="非常愿意"> 非常愿意</label>
+                            <label class="option"><input type="radio" name="use_ai" value="愿意尝试"> 愿意尝试</label>
+                            <label class="option"><input type="radio" name="use_ai" value="无所谓"> 无所谓</label>
+                            <label class="option"><input type="radio" name="use_ai" value="不愿意"> 不愿意</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit-survey">提交问卷 → 查看AI评估报告</button>
+            </form>
+        </div>
+
+        <!-- AI 报告页面 -->
+        <div class="report-container" id="reportPage">
+            <div class="report-title">AI 心脏健康风险评估报告</div>
+
+            <div class="risk-level">
+                风险等级：<span id="riskLevel">高风险</span>
+            </div>
+
+            <div class="prob-list" id="probList"></div>
+
+            <div class="block">
+                <h3>📌 高概率疾病</h3>
+                <p id="highDisease"></p>
+            </div>
+
+            <div class="block">
+                <h3>📊 病情判断依据</h3>
+                <p id="reason"></p>
+            </div>
+
+            <div class="block">
+                <h3>💡 专业建议</h3>
+                <p id="suggest"></p>
+            </div>
+
+            <button class="btn-submit-survey" onclick="window.location.reload()">返回问卷</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局主题同步（所有页面通用）
+        function initTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            const saved = localStorage.getItem('theme') || 'dark';
+            
+            html.setAttribute('data-theme', saved);
+            if (saved === 'light') {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            let current = html.getAttribute('data-theme');
+            let next = current === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            
+            if (next === 'light') {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        // AI 报告逻辑
+        function getAiResult() {
+            return {
+                "code": 200,
+                "message": "查询成功",
+                "data": {
+                    "disease_probabilities": [
+                        { "心脏病": 0.1212 },
+                        { "心力衰竭": 0.74 },
+                        { "冠心病": 0.39 },
+                        { "高血压": 0.9083 },
+                        { "心血管疾病": 0.6652 }
+                    ],
+                    "AI大模型分析": {
+                        "风险等级": "高风险",
+                        "高概率疾病": ["高血压", "心力衰竭", "心血管疾病"],
+                        "病情依据": "根据您的问卷信息，您为56岁以上男性，已确诊高血压、糖尿病、高脂血症，日常偏好高盐、高油饮食，每日吸烟11-20支、每日饮酒，几乎不运动，存在心悸、胸闷、活动后气短等心脏不适症状且近期发作频率增加；同时您的体检数据显示血压为160/100mmHg，远高于WHO规定的成人正常血压上限140/90mmHg，血脂偏高，空腹血糖7.5mmol/L高于正常空腹血糖6.1mmol/L的标准，BMI达29.4属于肥胖，心电图异常；结合体检报告AI预测结果，您高血压风险高达90.83%，心力衰竭、心血管疾病也处于中高风险区间，因此判定为高风险。",
+                        "建议": "首先建议您立即前往正规医院心内科就诊，完善心脏超声、冠脉CT等相关检查，遵医嘱规范服用降压、降脂、降糖药物，严格控制基础疾病；其次需立刻戒烟限酒，调整饮食结构，每日食盐摄入量控制在5g以内，避免油炸食品、动物内脏、腌制食品等高油高盐食物；日常可从散步、太极等低强度运动开始逐步增加活动量，避免长期久坐；规律作息，定期监测血压、血糖、心率变化，若出现剧烈胸痛、呼吸困难等不适需立即拨打急救电话就医。"
+                    }
+                }
+            };
+        }
+
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const result = getAiResult();
+            showReport(result.data);
+        });
+
+        function showReport(data) {
+            document.getElementById('surveyPage').style.display = 'none';
+            document.getElementById('reportPage').style.display = 'block';
+            document.getElementById('riskLevel').innerText = data['AI大模型分析']['风险等级'];
+
+            let probHtml = '';
+            data.disease_probabilities.forEach(item => {
+                const name = Object.keys(item)[0];
+                const value = (item[name] * 100).toFixed(2);
+                probHtml += `<div class="prob-item"><div class="disease-name">${name}</div><div class="prob-value">${value}%</div></div>`;
+            });
+            document.getElementById('probList').innerHTML = probHtml;
+            document.getElementById('highDisease').innerText = data['AI大模型分析']['高概率疾病'].join('、');
+            document.getElementById('reason').innerText = data['AI大模型分析']['病情依据'];
+            document.getElementById('suggest').innerText = data['AI大模型分析']['建议'];
+        }
+
+        window.onload = function () {
+            initTheme();
+        };
+    </script>
+</body>
+</html>
