@@ -3,193 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心脏预警系统</title>
+    <title>登录 - 心脏预警系统</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
     <div class="toast-container" id="toastContainer"></div>
-
     <button class="theme-toggle" onclick="toggleTheme()">
         <i class="fas fa-moon" id="themeIcon"></i>
     </button>
     
-    <div class="main-app" id="mainApp">
-        <nav class="top-nav">
-            <div class="nav-left">
-                <div class="brand">
-                    <i class="fas fa-heartbeat"></i>
-                    <span>心脏预警</span>
+    <div class="auth-container" id="authPage">
+        <div class="grid-bg"></div>
+        <div class="cards-wrapper" id="cardsWrapper">
+            <div class="card heart-card">
+                <div class="ecg-bg"></div>
+                <div class="pulse-rings">
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="ring"></div>
                 </div>
-                <div class="nav-links">
-                    <div class="nav-item active" onclick="window.location.href='index.html'">
-                        <i class="fas fa-home"></i>
-                        <span>首页</span>
-                    </div>
-                    <div class="nav-item" onclick="window.location.href='survey.html'">
-                        <i class="fas fa-file-alt"></i>
-                        <span>问卷调查</span>
-                    </div>
-                    <div class="nav-item" onclick="window.location.href='chat.html'">
-                        <i class="fas fa-comments"></i>
-                        <span>AI交互</span>
-                    </div>
-                    <div class="nav-item" onclick="window.location.href='report.html'">
-                        <i class="fas fa-file-medical"></i>
-                        <span>个人主页</span>
-                    </div>
-                    <div class="nav-item" onclick="window.location.href='history.html'">
-                        <i class="fas fa-history"></i>
-                        <span>历史问卷</span>
-                    </div>
-                </div>
-                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-            <div class="nav-right">
-                <div class="user-menu">
-                    <div class="user-avatar" id="userAvatar">U</div>
-                    <span class="user-name" id="currentUser">用户</span>
-                </div>
-                <button class="btn-icon" onclick="logout()" title="退出登录">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
-            </div>
-        </nav>
-        
-        <div class="mobile-menu" id="mobileMenu">
-            <div class="mobile-nav-links">
-                <div class="mobile-nav-item active" onclick="window.location.href='index.html'">
-                    <i class="fas fa-home"></i>
-                    <span>首页</span>
-                </div>
-                <div class="mobile-nav-item" onclick="window.location.href='survey.html'">
-                    <i class="fas fa-file-alt"></i>
-                    <span>问卷调查</span>
-                </div>
-                <div class="mobile-nav-item" onclick="window.location.href='chat.html'">
-                    <i class="fas fa-comments"></i>
-                    <span>AI交互</span>
-                </div>
-                <div class="mobile-nav-item" onclick="window.location.href='report.html'">
-                    <i class="fas fa-file-medical"></i>
-                    <span>体检报告</span>
-                </div>
-                <div class="mobile-nav-item" onclick="window.location.href='history.html'">
-                    <i class="fas fa-history"></i>
-                    <span>历史问卷</span>
+                <svg class="heart-svg" viewBox="0 0 24 24">
+                    <path class="heart-path" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                <div class="heart-text">
+                    <h2 id="heartTitle">心脏预警系统</h2>
+                    <p id="heartSubtitle">Cardiac Early Warning System</p>
                 </div>
             </div>
-        </div>
-        
-        <div class="content">
-            <div class="page active" id="page-home">
-                <div class="hero-section">
-                    <div class="hero-content">
-                        <div class="hero-icon">
-                            <div class="heart-animation">
-                                <i class="fas fa-heartbeat"></i>
+            <div class="card form-card">
+                <div class="form-content" id="loginForm">
+                    <div class="form-header">
+                        <h1>欢迎回来</h1>
+                        <p>登录以继续使用系统</p>
+                    </div>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="input-field">
+                            <label>用户名</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="loginUsername" placeholder="请输入用户名" required>
                             </div>
                         </div>
-                        <h1 class="hero-title">监测心脏健康，<span>预防胜于治疗</span></h1>
-                        <p class="hero-subtitle">
-                            基于人工智能的心脏病风险评估系统，通过分析您的健康数据，提供个性化
-                            的风险预警和健康建议。
-                        </p>
-                        <div class="hero-features">
-                            <div class="feature-item" onclick="goToChat()">
-                                <i class="fas fa-chart-line"></i>
-                                <span>AI风险评估</span>
-                            </div>
-                            <div class="feature-item">
-                                <i class="fas fa-user-md"></i>
-                                <span>专业健康建议</span>
-                            </div>
-                            <div class="feature-item">
-                                <i class="fas fa-bell"></i>
-                                <span>早期预警</span>
-                            </div>
-                            <div class="feature-item">
-                                <i class="fas fa-database"></i>
-                                <span>数据安全</span>
+                        <div class="input-field">
+                            <label>密码</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="请输入密码" required>
                             </div>
                         </div>
+                        <button type="submit" class="btn-main" id="loginBtn">
+                            <span class="spinner" style="display: none;"></span>
+                            <span>登录</span>
+                        </button>
+                    </form>
+                    <div class="form-switch">
+                        还没有账户？<a onclick="switchToRegister()">立即注册</a>
                     </div>
                 </div>
-                
-                <div class="news-section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-newspaper"></i>
-                            健康资讯
-                        </h2>
-                        <div class="news-controls">
-                            <button class="btn-icon" onclick="scrollNews(-1)">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="btn-icon" onclick="scrollNews(1)">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
+                <div class="form-content hidden" id="registerForm">
+                    <div class="form-header">
+                        <h1>创建账户</h1>
+                        <p>开始您的健康管理之旅</p>
                     </div>
-                    <div class="news-scroll" id="newsContainer"></div>
+                    <form onsubmit="handleRegister(event)">
+                        <div class="input-field">
+                            <label>用户名</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="regUsername" placeholder="请输入用户名" required>
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label>密码</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="regPassword" placeholder="请设置密码" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-main" id="registerBtn">
+                            <span class="spinner" style="display: none;"></span>
+                            <span>创建账户</span>
+                        </button>
+                    </form>
+                    <div class="form-switch">
+                        已有账户？<a onclick="switchToLogin()">立即登录</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <script src="js/main.js"></script>
     <script>
-        function getImageUrl(imageUrl) {
-            if (!imageUrl) return 'logo.png';
-            // 如果是代理接口的相对路径，拼接完整的API地址
-            if (imageUrl.startsWith('/api/proxy/image')) {
-                return API_BASE_URL.replace(/\/api$/, '') + imageUrl;
-            }
-            // 如果是绝对路径，直接返回
-            if (imageUrl.startsWith('http')) {
-                return imageUrl;
-            }
-            return 'logo.png';
+      
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+        });
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
 
-        async function loadNews() {
+        function switchToRegister() {
+            const wrapper = document.getElementById('cardsWrapper');
+            wrapper.classList.add('register-mode');
+
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('heartTitle').textContent = '加入我们';
+                document.getElementById('heartSubtitle').textContent = 'Protect Your Heart';
+            }, 300);
+
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function switchToLogin() {
+            const wrapper = document.getElementById('cardsWrapper');
+            wrapper.classList.remove('register-mode');
+
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('heartTitle').textContent = '心脏预警系统';
+                document.getElementById('heartSubtitle').textContent = 'Cardiac Early Warning System';
+            }, 300);
+
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
+        }
+
+        
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            btn.disabled = true;
+            btn.querySelector('.spinner').style.display = 'inline-block';
+            btn.querySelector('span:last-child').textContent = '登录中...';
+
             try {
-                const result = await getNews();
-                const container = document.getElementById('newsContainer');
+                const result = await login(username, password);
                 
-                if (result.code === 200 && result.data) {
-                    let html = '';
-                    result.data.forEach(news => {
-                        const imgSrc = getImageUrl(news.image_url);
-                        html += `
-                            <div class="news-card">
-                                <a href="${news.url}" target="_blank">
-                                    <div class="news-image">
-                                        <img src="${imgSrc}" alt="${news.title}" onerror="this.src='logo.png'">
-                                    </div>
-                                    <div class="news-content">
-                                        <h3>${news.title}</h3>
-                                        <p>${news.content || ''}</p>
-                                        <span class="news-date">${news.publish_time || ''}</span>
-                                    </div>
-                                </a>
-                            </div>
-                        `;
-                    });
-                    container.innerHTML = html;
+                if (result.code === 200) {
+                    setCurrentUser(username);
+                    showToast('登录成功！', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 800);
+                } else {
+                    showToast(result.message || '登录失败', 'error');
                 }
             } catch (error) {
-                console.error('加载新闻失败:', error);
+                showToast(error.message || '登录失败，请稍后重试', 'error');
+            } finally {
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.querySelector('.spinner').style.display = 'none';
+                    btn.querySelector('span:last-child').textContent = '登录';
+                }, 800);
             }
         }
 
-        window.onload = function() {
-            initTheme();
-            updateUserDisplay();
-            loadNews();
-        };
+        async function handleRegister(e) {
+            e.preventDefault();
+            const btn = document.getElementById('registerBtn');
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+
+            btn.disabled = true;
+            btn.querySelector('.spinner').style.display = 'inline-block';
+            btn.querySelector('span:last-child').textContent = '注册中...';
+
+            try {
+                const result = await register(username, password);
+                
+                if (result.code === 200) {
+                    showToast('注册成功！请登录', 'success');
+                    setTimeout(() => {
+                        switchToLogin();
+                    }, 1000);
+                } else {
+                    showToast(result.message || '注册失败', 'error');
+                }
+            } catch (error) {
+                showToast(error.message || '注册失败，请稍后重试', 'error');
+            } finally {
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.querySelector('.spinner').style.display = 'none';
+                    btn.querySelector('span:last-child').textContent = '创建账户';
+                }, 1000);
+            }
+        }
     </script>
 </body>
 </html>

@@ -84,7 +84,7 @@ function setCurrentUser(username) {
 function logout() {
     sessionStorage.removeItem('username');
     showToast('已退出登录', 'success');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 function goToChat() {
