@@ -284,6 +284,152 @@ body {
     color: #f59e0b;
     font-weight: bold;
 }
+
+/* ==================== 响应式设计 ==================== */
+
+/* 平板尺寸 */
+@media (max-width: 992px) {
+    body {
+        padding: 18px;
+    }
+    
+    .survey-container {
+        padding: 36px 28px;
+    }
+    
+    .survey-title {
+        font-size: 26px;
+    }
+    
+    .section-title {
+        font-size: 18px;
+    }
+    
+    .q-title {
+        font-size: 15px;
+    }
+    
+    .btn-submit-survey {
+        max-width: 100%;
+    }
+}
+
+/* 手机尺寸 */
+@media (max-width: 768px) {
+    body {
+        padding: 14px;
+    }
+    
+    .theme-toggle {
+        top: 12px;
+        right: 12px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .header {
+        margin-top: 60px auto 16px;
+    }
+    
+    .survey-container {
+        padding: 28px 18px;
+        border-radius: 14px;
+    }
+    
+    .survey-title {
+        font-size: 22px;
+    }
+    
+    .survey-desc {
+        font-size: 14px;
+        margin-bottom: 32px;
+    }
+    
+    .section {
+        margin-bottom: 36px;
+    }
+    
+    .section-title {
+        font-size: 17px;
+        margin-bottom: 20px;
+    }
+    
+    .q-title {
+        font-size: 14px;
+        margin-bottom: 14px;
+    }
+    
+    .option {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    .survey-input {
+        width: 100%;
+    }
+    
+    .inline-fields {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .btn-submit-survey {
+        font-size: 15px;
+        padding: 14px;
+        margin-top: 40px;
+    }
+    
+    .report-container {
+        padding: 24px 18px;
+        border-radius: 14px;
+        margin-top: 20px;
+    }
+    
+    .report-title {
+        font-size: 24px;
+    }
+    
+    .risk-level {
+        font-size: 18px;
+        padding: 16px;
+    }
+    
+    .radar-container {
+        padding: 16px;
+    }
+}
+
+/* 小屏幕手机 */
+@media (max-width: 480px) {
+    body {
+        padding: 12px 10px;
+    }
+    
+    .theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+    }
+    
+    .survey-container {
+        padding: 20px 14px;
+    }
+    
+    .survey-title {
+        font-size: 20px;
+    }
+    
+    .survey-desc {
+        font-size: 13px;
+    }
+    
+    .btn-submit-survey {
+        font-size: 14px;
+        padding: 12px;
+    }
+}
     </style>
 </head>
 <body>

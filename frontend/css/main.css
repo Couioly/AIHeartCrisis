@@ -379,3 +379,217 @@ body {
     background: #ff0000;
     border-radius: 50%;
 }
+
+/* ==================== 响应式设计 ==================== */
+
+/* 平板尺寸 */
+@media (max-width: 992px) {
+    .top-nav {
+        padding: 14px 20px;
+    }
+    
+    .nav-left {
+        gap: 20px;
+    }
+    
+    .nav-links {
+        gap: 12px;
+    }
+    
+    .nav-item {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    .hero-title {
+        font-size: 32px;
+    }
+    
+    .hero-subtitle {
+        font-size: 16px;
+    }
+    
+    .content {
+        padding: 20px 15px;
+    }
+    
+    .hero-section {
+        padding: 40px 15px;
+    }
+    
+    .section-title {
+        font-size: 24px;
+    }
+    
+    .news-card {
+        flex: 0 0 300px;
+    }
+}
+
+/* 手机尺寸 */
+@media (max-width: 768px) {
+    .theme-toggle {
+        top: 18px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .top-nav {
+        padding: 12px 15px;
+    }
+    
+    .nav-left {
+        gap: 15px;
+    }
+    
+    .brand {
+        font-size: 18px;
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .mobile-menu-btn {
+        display: flex;
+    }
+    
+    .user-name {
+        display: none;
+    }
+    
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .content {
+        padding: 20px 15px;
+    }
+    
+    .hero-section {
+        padding: 30px 10px;
+    }
+    
+    .hero-title {
+        font-size: 26px;
+        line-height: 1.4;
+    }
+    
+    .hero-subtitle {
+        font-size: 14px;
+        padding: 0 10px;
+    }
+    
+    .hero-features {
+        gap: 15px;
+    }
+    
+    .feature-item {
+        min-width: 120px;
+        padding: 18px 12px;
+        font-size: 14px;
+    }
+    
+    .feature-item i {
+        font-size: 22px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+    }
+    
+    .news-section {
+        margin-top: 40px;
+        padding: 0;
+    }
+    
+    .news-card {
+        flex: 0 0 260px;
+    }
+    
+    .news-image {
+        height: 160px;
+    }
+    
+    .news-content {
+        padding: 15px;
+    }
+    
+    .news-content h3 {
+        font-size: 16px;
+    }
+    
+    .news-content p {
+        font-size: 13px;
+    }
+}
+
+/* 小屏幕手机 */
+@media (max-width: 480px) {
+    .top-nav {
+        padding: 10px 12px;
+    }
+    
+    .brand {
+        font-size: 16px;
+    }
+    
+    .brand span {
+        display: none;
+    }
+    
+    .brand i {
+        font-size: 24px;
+    }
+    
+    .theme-toggle {
+        top: 14px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+    
+    .content {
+        padding: 15px 10px;
+    }
+    
+    .hero-section {
+        padding: 20px 5px;
+    }
+    
+    .hero-title {
+        font-size: 22px;
+    }
+    
+    .hero-subtitle {
+        font-size: 13px;
+    }
+    
+    .feature-item {
+        min-width: 100px;
+        padding: 14px 10px;
+        font-size: 13px;
+    }
+    
+    .feature-item i {
+        font-size: 20px;
+    }
+    
+    .news-card {
+        flex: 0 0 230px;
+    }
+    
+    .news-image {
+        height: 140px;
+    }
+}

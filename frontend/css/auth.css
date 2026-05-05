@@ -343,3 +343,66 @@
         order: 1;
     }
 }
+
+/* 手机尺寸 */
+@media (max-width: 480px) {
+    .theme-toggle {
+        top: 12px;
+        right: 12px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .cards-wrapper {
+        width: 94%;
+    }
+    
+    .heart-card {
+        height: 240px;
+    }
+    
+    .heart-svg {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .heart-text {
+        margin-top: 30px;
+    }
+    
+    .heart-text h2 {
+        font-size: 22px;
+    }
+    
+    .heart-text p {
+        font-size: 11px;
+    }
+    
+    .form-card {
+        padding: 32px 24px;
+    }
+    
+    .form-header h1 {
+        font-size: 24px;
+    }
+    
+    .form-header p {
+        font-size: 13px;
+    }
+    
+    .input-field input {
+        padding: 12px 14px 12px 42px;
+        font-size: 14px;
+    }
+    
+    .btn-main {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .pulse-rings {
+        width: 220px;
+        height: 220px;
+    }
+}

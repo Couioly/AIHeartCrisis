@@ -358,6 +358,159 @@
             color: var(--accent-red);
             font-weight: 600;
         }
+
+        /* ==================== 响应式设计 ==================== */
+
+        /* 平板尺寸 */
+        @media (max-width: 992px) {
+            .container {
+                padding: 0 20px;
+                margin: 30px auto;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+
+        /* 手机尺寸 */
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 24px;
+            }
+            
+            .theme-toggle {
+                top: 12px;
+                right: 12px;
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 0 16px;
+                height: 60px;
+            }
+            
+            .back-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+            
+            .header-title {
+                font-size: 17px;
+            }
+            
+            .container {
+                padding: 0 14px;
+                margin: 24px auto;
+            }
+            
+            .title {
+                font-size: 22px;
+                margin-bottom: 24px;
+            }
+            
+            .card {
+                padding: 18px 16px;
+                border-radius: 12px;
+            }
+            
+            .card h3 {
+                font-size: 16px;
+                margin-bottom: 16px;
+            }
+            
+            .item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .label {
+                font-size: 14px;
+            }
+            
+            .item-right {
+                width: 100%;
+            }
+            
+            .item-right input {
+                width: 100%;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+            
+            .report-item {
+                padding: 10px 14px;
+            }
+            
+            .report-label {
+                font-size: 13px;
+            }
+            
+            .report-value {
+                font-size: 13px;
+            }
+            
+            .modal {
+                padding: 10px;
+            }
+            
+            .modal-content {
+                max-width: 100%;
+                padding: 20px;
+            }
+            
+            .modal-content h2 {
+                font-size: 18px;
+            }
+            
+            .close-btn {
+                font-size: 24px;
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* 小屏幕手机 */
+        @media (max-width: 480px) {
+            .header {
+                padding: 0 12px;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 36px;
+                height: 36px;
+            }
+            
+            .header-title {
+                display: none;
+            }
+            
+            .container {
+                padding: 0 12px;
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
