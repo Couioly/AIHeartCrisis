@@ -3,7 +3,17 @@ import aiohttp
 from fastapi import HTTPException
 from bs4 import BeautifulSoup
 import fake_useragent
+import urllib.parse
 from schemas import NewsResponse, NewsArticle
+
+def get_proxy_image_url(original_url):
+    """将原始图片URL转换为代理接口URL"""
+    if not original_url:
+        return ''
+    # 对原始URL进行编码
+    encoded_url = urllib.parse.quote(original_url, safe='')
+    # 返回代理接口URL
+    return f"/api/proxy/image?url={encoded_url}"
 
 async def get_heart_news():
     """从医脉通心血管内科页面获取新闻数据"""
@@ -64,6 +74,9 @@ async def get_heart_news():
                                             image_url = f"https://www.medlive.cn{image_url}"
                                     else:
                                         image_url = f"https://www.medlive.cn/{image_url}"
+                                # 将图片URL转换为代理接口URL
+                                if image_url:
+                                    image_url = get_proxy_image_url(image_url)
 
                                 if title and link:
                                     # 创建NewsArticle对象

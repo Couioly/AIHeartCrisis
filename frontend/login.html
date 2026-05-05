@@ -96,33 +96,18 @@
         </div>
     </div>
     
+    <script src="js/main.js"></script>
     <script>
       
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
         });
 
-      
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
-        }
-
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-            updateThemeIcon(next);
-        }
-
         function updateThemeIcon(theme) {
             const icon = document.getElementById('themeIcon');
             icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
 
-   
         function switchToRegister() {
             const wrapper = document.getElementById('cardsWrapper');
             wrapper.classList.add('register-mode');
@@ -160,25 +145,28 @@
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
             const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
 
-          
             btn.disabled = true;
             btn.querySelector('.spinner').style.display = 'inline-block';
             btn.querySelector('span:last-child').textContent = '登录中...';
 
             try {
-            
-                sessionStorage.setItem('username', username);
-                showToast('登录成功！', 'success');
+                const result = await login(username, password);
                 
-               
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 800);
-            } catch (err) {
-                showToast('登录失败', 'error');
+                if (result.code === 200) {
+                    setCurrentUser(username);
+                    showToast('登录成功！', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 800);
+                } else {
+                    showToast(result.message || '登录失败', 'error');
+                }
+            } catch (error) {
+                showToast(error.message || '登录失败，请稍后重试', 'error');
             } finally {
-              
                 setTimeout(() => {
                     btn.disabled = false;
                     btn.querySelector('.spinner').style.display = 'none';
@@ -187,23 +175,29 @@
             }
         }
 
-  
         async function handleRegister(e) {
             e.preventDefault();
             const btn = document.getElementById('registerBtn');
             const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
 
             btn.disabled = true;
             btn.querySelector('.spinner').style.display = 'inline-block';
             btn.querySelector('span:last-child').textContent = '注册中...';
 
             try {
-                showToast('注册成功！', 'success');
-                setTimeout(() => {
-                    switchToLogin();
-                }, 1000);
-            } catch (err) {
-                showToast('注册失败', 'error');
+                const result = await register(username, password);
+                
+                if (result.code === 200) {
+                    showToast('注册成功！请登录', 'success');
+                    setTimeout(() => {
+                        switchToLogin();
+                    }, 1000);
+                } else {
+                    showToast(result.message || '注册失败', 'error');
+                }
+            } catch (error) {
+                showToast(error.message || '注册失败，请稍后重试', 'error');
             } finally {
                 setTimeout(() => {
                     btn.disabled = false;
@@ -211,23 +205,6 @@
                     btn.querySelector('span:last-child').textContent = '创建账户';
                 }, 1000);
             }
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-
-            const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
-            toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-20px) translateX(-50%)';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
         }
     </script>
 </body>

@@ -5,169 +5,428 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>历史问卷报告 - 心脏健康评估</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+    // 问卷问题数据
+    const questionData = {
+        1: "您的年龄：",
+        2: "您的性别：",
+        3: "您的职业类别：",
+        4: "您的最高学历：",
+        5: "您目前的工作模式：",
+        6: "近3个月平均工作时长：",
+        7: "您的工作环境及久坐情况：",
+        8: "您认为自己的工作强度：",
+        9: "您的通勤情况：",
+        10: "近3个月是否经常出现以下情绪？（可多选）",
+        11: "您在工作中感受到的支持程度：",
+        12: "近3个月精神压力负荷评分（1-10分）：",
+        13: "面临工作截止日期或突发任务时，是否出现以下生理反应？（可多选）",
+        14: "您的睡眠质量：",
+        15: "\"明明很累，但大脑停不下来，导致失眠\"的频率：",
+        16: "您的作息规律性：",
+        17: "您是否有午休习惯？",
+        18: "近3个月是否出现过以下症状？（可多选）",
+        19: "是否经历过\"短暂性心脏不适，休息后缓解\"的情况：",
+        20: "运动时的身体反应：",
+        21: "直系亲属（父母、兄弟姐妹）中是否有人患有以下疾病？（可多选）",
+        22: "您本人是否曾被诊断为以下疾病？（可多选）",
+        23: "您的饮食偏好：（可多选）",
+        24: "规律体育锻炼情况：",
+        25: "吸烟习惯：",
+        26: "饮酒习惯：",
+        27: "咖啡/功能饮料摄入：",
+        28: "您是否了解\"长期加班与心源性猝死\"的关联？",
+        29: "如果AI提示您处于\"高风险\"，您认为最可能的原因是？（可多选）",
+        30: "您是否愿意使用AI预警系统实时监测心脏风险？"
+    };
+    </script>
     <style>
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Microsoft YaHei", sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 :root {
-    --body-bg: #000;
-    --card-bg: #111;
-    --text-primary: #fff;
-    --text-secondary: #eee;
-    --input-bg: #222;
-    --border-color: #ff0000;
-    --hover-bg: #333;
+    --body-bg: #0f1117;
+    --card-bg: #1a1d29;
+    --card-bg-hover: #222533;
+    --text-primary: #ffffff;
+    --text-secondary: #a7b0c4;
+    --text-muted: #6b7280;
+    --border-color: #2d3142;
+    --accent-red: #dc2626;
+    --accent-red-light: #ef4444;
+    --accent-orange: #f59e0b;
+    --accent-green: #22c55e;
 }
 html[data-theme="light"] {
-    --body-bg: #fff;
-    --card-bg: #f9f9f9;
-    --text-primary: #000;
-    --text-secondary: #333;
-    --input-bg: #f5f5f9;
-    --border-color: #ff0000;
-    --hover-bg: #ffe5e5;
+    --body-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --card-bg-hover: #f1f5f9;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border-color: #e2e8f0;
 }
 body {
     background-color: var(--body-bg);
     color: var(--text-primary);
-    padding: 20px;
-    font-size: 18px;
-    line-height: 1.7;
+    padding: 24px;
+    min-height: 100vh;
     transition: all 0.3s ease;
 }
 .theme-toggle {
     position: fixed;
-    top: 25px;
-    right: 25px;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: red;
-    color: white;
-    border: none;
-    font-size: 20px;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    font-size: 18px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 999;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
 }
-.back-group {
-    max-width: 1000px;
-    margin: 0 auto 20px;
-    display: flex;
-    gap: 12px;
+.theme-toggle:hover {
+    background: var(--card-bg-hover);
+    transform: translateY(-2px);
 }
-.back-group button {
-    background: #ff0000;
-    color: #fff;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-}
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-.page-title {
-    font-size: 34px;
-    text-align: center;
-    margin-bottom: 10px;
-    color: var(--text-primary);
-    font-weight: bold;
-}
-.page-desc {
-    text-align: center;
-    color: var(--text-secondary);
-    margin-bottom: 40px;
-    font-size: 18px;
-}
-.history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-.history-item {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 24px 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    border-left: 6px solid #ff0000;
-    transition: 0.2s;
-}
-.history-item:hover {
-    transform: translateY(-3px);
-}
-.history-header {
+.header {
+    max-width: 1200px;
+    margin: 0 auto 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-    gap: 10px;
 }
-.history-date {
-    font-size: 20px;
-    font-weight: bold;
+.header-left {
+    display: flex;
+    gap: 12px;
+}
+.btn-back, .btn-new {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+}
+.btn-back {
+    background: var(--card-bg);
     color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+.btn-back:hover {
+    background: var(--card-bg-hover);
+}
+.btn-new {
+    background: var(--accent-red);
+    color: white;
+}
+.btn-new:hover {
+    background: var(--accent-red-light);
+    transform: translateY(-2px);
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.page-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+.page-desc {
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    font-size: 15px;
+}
+.history-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 20px;
+}
+.history-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.history-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(220, 38, 38, 0.3);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+}
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+.card-date {
+    display: flex;
+    flex-direction: column;
+}
+.date-day {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.date-time {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+.card-id {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    padding: 4px 10px;
+    background: var(--border-color);
+    border-radius: 6px;
+    display: inline-flex;
+    width: fit-content;
+}
+.card-risk {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 .risk-tag {
     padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-}
-.risk-high { background: #e74c3c; }
-.risk-middle { background: #f39c12; }
-.risk-low { background: #27ae60; }
-.history-simple {
-    color: var(--text-secondary);
-    font-size: 17px;
-    margin-bottom: 16px;
-}
-.disease-high {
-    color: #ff0000;
-    font-weight: bold;
-}
-.history-btns {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-.btn {
-    padding: 10px 20px;
     border-radius: 8px;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.2s;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.risk-high {
+    background: rgba(220, 38, 38, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+.risk-middle {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.risk-low {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.diseases-section h4 {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.diseases-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.disease-badge {
+    background: var(--border-color);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.card-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
 }
 .btn-view {
-    background: #ff0000;
-    color: #fff;
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
-.btn-view:hover {
-    background: #cc0000;
+.btn-view-report {
+    background: var(--accent-red);
+    color: white;
 }
-.btn-del {
-    background: var(--input-bg);
+.btn-view-report:hover {
+    background: var(--accent-red-light);
+    transform: translateY(-1px);
+}
+.btn-view-survey {
+    background: var(--card-bg-hover);
     color: var(--text-primary);
+    border-color: var(--border-color);
 }
-.btn-del:hover {
-    background: #444;
+.btn-view-survey:hover {
+    border-color: var(--text-muted);
 }
 .empty {
     text-align: center;
-    padding: 60px 20px;
+    padding: 80px 20px;
     color: var(--text-secondary);
+}
+.empty-icon {
+    font-size: 56px;
+    margin-bottom: 20px;
+    opacity: 0.4;
+}
+.empty p {
+    font-size: 15px;
+    margin-bottom: 24px;
+}
+/* 查看问卷模态框 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.modal-overlay.show {
+    display: flex;
+}
+.modal {
+    background: var(--card-bg);
+    border-radius: 16px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+}
+.modal-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
     font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+.modal-close:hover {
+    background: var(--border-color);
+    color: var(--text-primary);
+}
+.modal-body {
+    padding: 24px;
+}
+.survey-detail-section {
+    margin-bottom: 20px;
+}
+.survey-detail-section h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+.survey-detail-item {
+    display: flex;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.survey-detail-label {
+    color: var(--text-secondary);
+    width: 120px;
+    flex-shrink: 0;
+}
+.survey-detail-value {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+.survey-answers {
+    margin-top: 20px;
+}
+.answer-item {
+    background: var(--border-color);
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+.answer-q {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+.answer-a {
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+@media (max-width: 768px) {
+    body {
+        padding: 16px;
+    }
+    .history-list {
+        grid-template-columns: 1fr;
+    }
+    .page-title {
+        font-size: 24px;
+    }
+    .header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    .header-left {
+        width: 100%;
+    }
 }
     </style>
 </head>
@@ -177,25 +436,55 @@ body {
     <i class="fas fa-moon" id="themeIcon"></i>
 </button>
 
-<div class="back-group">
-    <button onclick="window.location.href='index.html'">← 返回首页</button>
-    <button onclick="window.location.href='survey.html'">前往问卷</button>
+<div class="header">
+    <div class="header-left">
+        <button class="btn-back" onclick="window.location.href='index.html'">
+            <i class="fas fa-arrow-left"></i> 返回首页
+        </button>
+    </div>
+    <button class="btn-new" onclick="window.location.href='survey.html'">
+        <i class="fas fa-plus"></i> 新问卷
+    </button>
 </div>
 
 <div class="container">
-    <h2 class="page-title">📋 历史问卷评估报告</h2>
-    <div class="page-desc">查看你所有的心脏健康评估记录，追踪健康变化</div>
+    <h1 class="page-title">历史评估记录</h1>
+    <p class="page-desc">查看你所有的心脏健康评估记录，追踪健康变化</p>
+    
     <div class="history-list" id="historyList"></div>
-    <div class="empty" id="emptyTip" style="display:none;">暂无历史问卷记录，快去完成一次评估吧！</div>
+    
+    <div class="empty" id="emptyTip" style="display:none;">
+        <div class="empty-icon">📋</div>
+        <p>暂无历史问卷记录</p>
+        <button class="btn-new" onclick="window.location.href='survey.html'">
+            <i class="fas fa-plus"></i> 开始评估
+        </button>
+    </div>
 </div>
 
+<!-- 查看问卷模态框 -->
+<div class="modal-overlay" id="surveyModal">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">问卷详情</div>
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body" id="surveyModalContent">
+            <!-- 动态内容 -->
+        </div>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
 <script>
- 
     function initTheme() {
         const html = document.documentElement;
         const icon = document.getElementById('themeIcon');
         const saved = localStorage.getItem('theme') || 'dark';
         html.setAttribute('data-theme', saved);
+        
         if (saved === 'light') {
             icon.classList.replace('fa-moon', 'fa-sun');
         } else {
@@ -203,58 +492,183 @@ body {
         }
     }
 
-    function toggleTheme() {
-        const html = document.documentElement;
-        const icon = document.getElementById('themeIcon');
-        let current = html.getAttribute('data-theme');
-        let next = current === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-        if (next === 'light') {
-            icon.classList.replace('fa-moon', 'fa-sun');
-        } else {
-            icon.classList.replace('fa-sun', 'fa-moon');
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return {
+            day: `${year}-${month}-${day}`,
+            time: `${hours}:${minutes}`
+        };
+    }
+
+    function getRiskClass(riskLevel) {
+        if (!riskLevel) return 'risk-middle';
+        const level = riskLevel.toLowerCase();
+        if (level.includes('高')) return 'risk-high';
+        if (level.includes('低')) return 'risk-low';
+        return 'risk-middle';
+    }
+
+    async function loadHistory() {
+        const username = getCurrentUser();
+        if (!username) {
+            showToast('请先登录', 'error');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const result = await getUserHistoryList(username);
+            
+            if (result.code === 200 && result.data) {
+                renderHistory(result.data);
+            } else {
+                showToast(result.message || '获取历史记录失败', 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            showToast(error.message || '获取历史记录失败', 'error');
         }
     }
 
-  
-    const mockHistory = [
-        {id:1, date:"2025-12-20 14:30", riskLevel:"高风险", highDisease:["高血压","心力衰竭","心血管疾病"], simple:"工作强度极高、长期熬夜、久坐、有胸闷心悸症状，存在多项高危因素"},
-        {id:2, date:"2025-12-15 10:15", riskLevel:"中风险", highDisease:["冠心病","心血管疾病"], simple:"压力较大、睡眠一般、偶尔心脏不适，建议改善作息并加强运动"},
-        {id:3, date:"2025-12-10 09:20", riskLevel:"低风险", highDisease:["无"], simple:"作息规律、运动充足、无明显症状，心脏健康状况良好"}
-    ];
-
-    function renderHistory() {
-        const list = document.getElementById('historyList');
-        const empty = document.getElementById('emptyTip');
-        if (!mockHistory.length) { empty.style.display='block'; list.innerHTML=''; return; }
-        empty.style.display='none';
+    function renderHistory(historyList) {
+        const listEl = document.getElementById('historyList');
+        const emptyEl = document.getElementById('emptyTip');
+        
+        if (!historyList || historyList.length === 0) {
+            emptyEl.style.display = 'block';
+            listEl.innerHTML = '';
+            return;
+        }
+        
+        emptyEl.style.display = 'none';
         let html = '';
-        mockHistory.forEach(item => {
-            let riskCls = item.riskLevel=='高风险'?'risk-high':item.riskLevel=='中风险'?'risk-middle':'risk-low';
-            let disease = item.highDisease.join('、');
+        
+        historyList.forEach(item => {
+            const dateObj = formatDate(item.prediction_time || item.created_at);
+            const riskClass = getRiskClass(item.risk_level);
+
             html += `
-            <div class="history-item">
-                <div class="history-header">
-                    <div class="history-date">${item.date}</div>
-                    <div class="risk-tag ${riskCls}">${item.riskLevel}</div>
+            <div class="history-card">
+                <div class="card-header">
+                    <div class="card-date">
+                        <div class="date-day">${dateObj.day}</div>
+                        <div class="date-time">${dateObj.time}</div>
+                        <div class="card-id">ID: ${item.id}</div>
+                    </div>
+                    <div class="card-risk ${riskClass}">
+                        ${item.risk_level || '未评估'}
+                    </div>
                 </div>
-                <div class="history-simple">高概率疾病：<span class="disease-high">${disease}</span><br>${item.simple}</div>
-                <div class="history-btns">
-                    <button class="btn btn-view" onclick="viewReport(${item.id})">查看详情</button>
-                    <button class="btn btn-del" onclick="deleteReport(${item.id})">删除记录</button>
+                <div class="card-footer">
+                    <button class="btn-view btn-view-survey" onclick="viewSurvey(${item.questionnaire_id})">
+                        <i class="fas fa-file-alt"></i> 查看问卷
+                    </button>
+                    <button class="btn-view btn-view-report" onclick="viewReport(${item.questionnaire_id})">
+                        <i class="fas fa-chart-line"></i> 查看报告
+                    </button>
                 </div>
             </div>`;
         });
-        list.innerHTML = html;
+        
+        listEl.innerHTML = html;
     }
 
-    function viewReport(id) { alert('打开第 '+id+' 份报告'); }
-    function deleteReport(id) { if(confirm('确定删除？')){ alert('已删除'); renderHistory(); } }
+    function viewReport(questionnaireId) {
+        window.location.href = `survey.html?report=${questionnaireId}`;
+    }
+
+    async function viewSurvey(questionnaireId) {
+        try {
+            const result = await getQuestionnaireDetail(questionnaireId);
+            if (result.success && result.data) {
+                showSurveyModal(result.data);
+            } else {
+                showToast('获取问卷详情失败', 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            showToast(error.message || '获取问卷详情失败', 'error');
+        }
+    }
+
+    function showSurveyModal(data) {
+        const modal = document.getElementById('surveyModal');
+        const content = document.getElementById('surveyModalContent');
+        
+        let html = '';
+        
+        // 基本信息
+        if (data.basic_info) {
+            html += `
+            <div class="survey-detail-section">
+                <h4>基本信息</h4>
+                <div class="survey-detail-item">
+                    <div class="survey-detail-label">年龄</div>
+                    <div class="survey-detail-value">${data.basic_info.age || '-'}</div>
+                </div>
+                <div class="survey-detail-item">
+                    <div class="survey-detail-label">性别</div>
+                    <div class="survey-detail-value">${data.basic_info.gender || '-'}</div>
+                </div>
+                <div class="survey-detail-item">
+                    <div class="survey-detail-label">职业</div>
+                    <div class="survey-detail-value">${data.basic_info.occupation || '-'}</div>
+                </div>
+                <div class="survey-detail-item">
+                    <div class="survey-detail-label">学历</div>
+                    <div class="survey-detail-value">${data.basic_info.education || '-'}</div>
+                </div>
+            </div>`;
+        }
+        
+        // 问卷答案
+        if (data.answers && data.answers.length > 0) {
+            html += `<div class="survey-answers">`;
+            data.answers.forEach((ans, idx) => {
+                const qid = ans.question_id ? parseInt(ans.question_id) : idx + 1;
+                const questionText = questionData[qid] || `问题 ${qid}`;
+                let value = ans.answer;
+                
+                // 处理数组和对象
+                if (Array.isArray(value)) {
+                    value = value.join('、');
+                } else if (typeof value === 'object' && value !== null) {
+                    value = JSON.stringify(value);
+                }
+                
+                html += `
+                <div class="answer-item">
+                    <div class="answer-q">${questionText}</div>
+                    <div class="answer-a">${value || '-'}</div>
+                </div>`;
+            });
+            html += `</div>`;
+        }
+        
+        content.innerHTML = html;
+        modal.classList.add('show');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('surveyModal');
+        modal.classList.remove('show');
+    }
+
+    // 点击遮罩层关闭
+    document.getElementById('surveyModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
 
     window.onload = function() {
         initTheme();
-        renderHistory();
+        loadHistory();
     };
 </script>
 </body>

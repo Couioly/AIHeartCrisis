@@ -140,5 +140,56 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script>
+        function getImageUrl(imageUrl) {
+            if (!imageUrl) return 'logo.png';
+            // 如果是代理接口的相对路径，拼接完整的API地址
+            if (imageUrl.startsWith('/api/proxy/image')) {
+                return API_BASE_URL.replace(/\/api$/, '') + imageUrl;
+            }
+            // 如果是绝对路径，直接返回
+            if (imageUrl.startsWith('http')) {
+                return imageUrl;
+            }
+            return 'logo.png';
+        }
+
+        async function loadNews() {
+            try {
+                const result = await getNews();
+                const container = document.getElementById('newsContainer');
+                
+                if (result.code === 200 && result.data) {
+                    let html = '';
+                    result.data.forEach(news => {
+                        const imgSrc = getImageUrl(news.image_url);
+                        html += `
+                            <div class="news-card">
+                                <a href="${news.url}" target="_blank">
+                                    <div class="news-image">
+                                        <img src="${imgSrc}" alt="${news.title}" onerror="this.src='logo.png'">
+                                    </div>
+                                    <div class="news-content">
+                                        <h3>${news.title}</h3>
+                                        <p>${news.content || ''}</p>
+                                        <span class="news-date">${news.publish_time || ''}</span>
+                                    </div>
+                                </a>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('加载新闻失败:', error);
+            }
+        }
+
+        window.onload = function() {
+            initTheme();
+            updateUserDisplay();
+            loadNews();
+        };
+    </script>
 </body>
 </html>

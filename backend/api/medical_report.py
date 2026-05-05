@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from models import get_db
+from sqlalchemy.future import select
+from models import get_db, MedicalReport
 from schemas import MedicalReportSaveRequest
 from service import extract_report_data, save_medical_report
 import logging
@@ -51,3 +52,57 @@ async def save_medical_report_endpoint(
     - **medical_data**: 体检报告数据字典
     """
     return await save_medical_report(db, request.username, request.medical_data)
+
+
+@router.get("/medical-report/latest", summary="获取用户最新体检报告")
+async def get_latest_medical_report(
+    username: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    获取用户最新的体检报告
+    
+    - **username**: 用户名
+    """
+    try:
+        result = await db.execute(
+            select(MedicalReport)
+            .where(MedicalReport.username == username)
+            .order_by(MedicalReport.created_at.desc())
+            .limit(1)
+        )
+        latest_report = result.scalar_one_or_none()
+        
+        if not latest_report:
+            return {
+                "code": 404,
+                "message": "暂无体检报告",
+                "data": None
+            }
+        
+        # 收集所有体检数据字段
+        report_data = {}
+        for column in MedicalReport.__table__.columns:
+            if column.name not in ['id', 'username', 'created_at', 'ai_report_result']:
+                value = getattr(latest_report, column.name)
+                if value is not None and value != '':
+                    report_data[column.name] = value
+        
+        return {
+            "code": 200,
+            "message": "获取成功",
+            "data": {
+                "id": latest_report.id,
+                "username": latest_report.username,
+                "created_at": latest_report.created_at,
+                "report_data": report_data,
+                "ai_report_result": latest_report.ai_report_result
+            }
+        }
+    except Exception as e:
+        logger.error(f"获取体检报告失败: {str(e)}", exc_info=True)
+        return {
+            "code": 500,
+            "message": f"获取体检报告失败: {str(e)}",
+            "data": None
+        }

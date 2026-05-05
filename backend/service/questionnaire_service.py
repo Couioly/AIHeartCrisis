@@ -158,6 +158,7 @@ async def submit_questionnaire(db: AsyncSession, data: QuestionnaireSubmit):
         await db.refresh(questionnaire)
         
         # 调用AI大模型接口进行分析
+        ai_response = None
         try:
             # 查询用户最新的体检报告
             medical_report_ai_result = None
@@ -209,14 +210,20 @@ async def submit_questionnaire(db: AsyncSession, data: QuestionnaireSubmit):
             # AI分析失败不影响问卷提交
             print(f"AI分析失败: {ai_error}")
         
+        response_data = {
+            "questionnaire_id": questionnaire.id,
+            "submission_time": data.submission_time,
+            "risk_level": questionnaire.risk_level
+        }
+        
+        # 如果AI预测成功，把结果也返回
+        if ai_response and ai_response.get("code") == 200 and ai_response.get("data"):
+            response_data["prediction"] = ai_response["data"].get("prediction")
+        
         return QuestionnaireResponse(
             success=True,
             message="问卷提交成功",
-            data={
-                "questionnaire_id": questionnaire.id,
-                "submission_time": data.submission_time,
-                "risk_level": questionnaire.risk_level
-            }
+            data=response_data
         )
     except Exception as e:
         await db.rollback()

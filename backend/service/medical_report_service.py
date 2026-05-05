@@ -12,6 +12,86 @@ from .multi_disease_predict_service import predict_diseases
 
 logger = logging.getLogger(__name__)
 
+FIELD_NAME_MAP = {
+    "姓名": "subject_identifier",
+    "性别": "sex",
+    "年龄": "age",
+    "检测日期": "time",
+    "身高": "height",
+    "体重": "weight",
+    "BMI": "BMI",
+    "体重指数": "BMI",
+    "静息血压": "trestbps",
+    "收缩压": "sysBP",
+    "舒张压": "diaBP",
+    "心率": "heartRate",
+    "最大心率": "thalach",
+    "胆固醇": "chol",
+    "总胆固醇": "totChol",
+    "空腹血糖": "fbs",
+    "血糖": "glucose",
+    "是否贫血": "anemia",
+    "肌酐": "creatinin",
+    "血小板": "platelets",
+    "血清肌酐": "serum_creatinine",
+    "钠": "sodium",
+    "射血分数": "ejection",
+    "量子指标": "Quantum",
+    "是否吸烟": "smoke",
+    "当前是否吸烟": "currentSmok",
+    "每天吸烟数量": "cigsPerDay",
+    "是否饮酒": "alco",
+    "饮酒量": "Alcohol",
+    "是否服用降压药": "BPMeds",
+    "是否有糖尿病": "diabetes",
+    "是否有高血压": "high_blood_pressure",
+    "是否活跃": "active",
+    "是否锻炼": "Exercise",
+    "是否有家族病史": "Family_History",
+    "是否无疾病": "No_Diseases",
+    "压力水平": "stress",
+    "睡眠质量": "Sleep",
+    "糖摄入量": "sugar",
+    "饮食质量": "diet",
+    "是否肥胖": "obesity",
+    "胸痛类型": "cp",
+    "静息心电图结果": "restecg",
+    "运动诱发心绞痛": "exang",
+    "ST段压低": "oldpeak",
+    "运动ST段斜率": "slope",
+    "主要血管数量": "ca",
+    "地中海贫血": "thal",
+    "受试者": "subject",
+    "第一导联段": "segment1",
+    "第二导联段": "segment2",
+    "第三导联段": "segment3",
+    "第四导联段": "segment4",
+    "数量": "Num",
+    "是否有心脏病": "HeartDisease",
+    "风险评分": "Risk",
+    "是否死亡事件": "DEATH_EVENT"
+}
+
+def convert_field_names(data: dict) -> dict:
+    """将中文字段名转换为英文字段名"""
+    converted = {}
+    for key, value in data.items():
+        # 如果是中文字段名，转换为英文
+        if key in FIELD_NAME_MAP:
+            converted[FIELD_NAME_MAP[key]] = value
+        elif key in FIELD_NAME_MAP.values():
+            # 已经是英文字段名，直接使用
+            converted[key] = value
+        else:
+            # 保留其他字段
+            converted[key] = value
+    
+    # 确保一些特殊字段正确设置
+    if "sex" in converted:
+        converted["male"] = 1 if converted["sex"] == "男" else 0
+    
+    return converted
+
 
 async def extract_report_data(file: UploadFile):
     file_location = None
@@ -101,9 +181,12 @@ async def save_medical_report(db: AsyncSession, username: str, medical_data: dic
                 detail={"code": 404, "message": "用户不存在"}
             )
         
+        # 转换字段名
+        converted_data = convert_field_names(medical_data)
+        
         medical_report = MedicalReport(
             username=username,
-            **medical_data
+            **converted_data
         )
         
         db.add(medical_report)
