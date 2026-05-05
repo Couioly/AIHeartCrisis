@@ -100,6 +100,11 @@ body {
     padding: 48px 40px;
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
     border: 1px solid var(--border-color);
+    display: block;
+}
+
+#reportPage {
+    display: none;
 }
 .survey-title {
     font-size: 32px;
@@ -283,6 +288,63 @@ body {
 .high-disease {
     color: #f59e0b;
     font-weight: bold;
+}
+.bar-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 24px auto;
+    padding: 24px;
+    background: var(--card-bg-hover);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+.dashboard-card {
+    background: var(--card-bg-hover);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+.dashboard-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+.dashboard-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent-red);
+    margin-bottom: 4px;
+}
+.dashboard-unit {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+.dashboard-status {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-block;
+}
+.dashboard-status.normal {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+}
+.dashboard-status.fair {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+}
+.dashboard-status.poor {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
 }
 
 /* ==================== 响应式设计 ==================== */
@@ -794,6 +856,29 @@ body {
                 风险等级：<span id="riskLevel">高风险</span>
             </div>
 
+            <!-- 健康仪表盘 -->
+            <div id="dashboardSection" class="block" style="display: none;">
+                <h3>🏥 健康仪表盘</h3>
+                <div id="healthDashboard" class="dashboard-grid"></div>
+            </div>
+
+            <!-- 雷达图（风险因素） -->
+            <div id="factorsRadarSection" class="block" style="display: none;">
+                <h3>🎯 风险因素雷达图</h3>
+                <div class="radar-container">
+                    <canvas id="factorsRadarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 柱状图（风险因素） -->
+            <div id="factorsBarSection" class="block" style="display: none;">
+                <h3>📊 风险因素柱状图</h3>
+                <div class="bar-container">
+                    <canvas id="factorsBarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 发病概率雷达图 -->
             <div class="radar-container">
                 <canvas id="radarChart"></canvas>
             </div>
@@ -911,6 +996,8 @@ body {
         });
 
         let radarChartInstance = null;
+        let factorsRadarChartInstance = null;
+        let factorsBarChartInstance = null;
 
         function renderRadarChart(probData) {
             const ctx = document.getElementById('radarChart').getContext('2d');
@@ -986,11 +1073,193 @@ body {
             });
         }
 
+        // 渲染风险因素雷达图
+        function renderFactorsRadarChart(radarData) {
+            const ctx = document.getElementById('factorsRadarChart').getContext('2d');
+            
+            if (factorsRadarChartInstance) {
+                factorsRadarChartInstance.destroy();
+            }
+
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+            const textColor = isLight ? '#333' : '#fff';
+            const gridColor = isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+
+            factorsRadarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: radarData.labels,
+                    datasets: [{
+                        label: '风险因素评分',
+                        data: radarData.values,
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            angleLines: {
+                                color: gridColor
+                            },
+                            grid: {
+                                color: gridColor
+                            },
+                            pointLabels: {
+                                color: textColor,
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                color: textColor,
+                                backdropColor: 'transparent',
+                                stepSize: 20
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: textColor,
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 渲染风险因素柱状图
+        function renderFactorsBarChart(barData) {
+            const ctx = document.getElementById('factorsBarChart').getContext('2d');
+            
+            if (factorsBarChartInstance) {
+                factorsBarChartInstance.destroy();
+            }
+
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+            const textColor = isLight ? '#333' : '#fff';
+            const gridColor = isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+
+            const labels = barData.map(item => item.name);
+            const data = barData.map(item => item.value);
+
+            // 根据值设置颜色渐变
+            const backgroundColors = data.map(value => {
+                if (value >= 80) return 'rgba(239, 68, 68)';
+                if (value >= 60) return 'rgba(245, 158, 11)';
+                if (value >= 40) return 'rgba(59, 130, 246)';
+                return 'rgba(16, 185, 129)';
+            });
+
+            factorsBarChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '风险评分',
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors,
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: gridColor
+                            },
+                            ticks: {
+                                color: textColor
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: gridColor
+                            },
+                            ticks: {
+                                color: textColor
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: textColor,
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 渲染健康仪表盘
+        function renderHealthDashboard(dashboardData) {
+            const container = document.getElementById('healthDashboard');
+            container.innerHTML = '';
+
+            const labelMap = {
+                'bmi': 'BMI',
+                'heart_rate': '心率',
+                'blood_sugar': '血糖',
+                'blood_oxygen': '血氧',
+                'sleep_quality': '睡眠质量',
+                'blood_pressure': '血压'
+            };
+
+            Object.keys(dashboardData).forEach(key => {
+                const item = dashboardData[key];
+                const card = document.createElement('div');
+                card.className = 'dashboard-card';
+
+                let valueDisplay = '';
+                if (key === 'blood_pressure') {
+                    valueDisplay = `${item.systolic}/${item.diastolic}`;
+                } else {
+                    valueDisplay = item.value;
+                }
+
+                card.innerHTML = `
+                    <div class="dashboard-label">${labelMap[key] || key}</div>
+                    <div class="dashboard-value">${valueDisplay}</div>
+                    <div class="dashboard-unit">${item.unit || ''}</div>
+                    <div class="dashboard-status ${item.status}">${item.status === 'normal' ? '正常' : item.status === 'fair' ? '一般' : '较差'}</div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
         function showReport(data) {
             document.getElementById('surveyPage').style.display = 'none';
             document.getElementById('reportPage').style.display = 'block';
 
             let probabilities = [];
+            let fullPrediction = null;
 
             if (data.prediction) {
                 const pred = data.prediction;
@@ -1006,6 +1275,10 @@ body {
                 if (pred['AI大模型PKL预测发病概率']) {
                     probabilities = pred['AI大模型PKL预测发病概率'];
                 }
+                
+                if (pred['full_prediction_result']) {
+                    fullPrediction = pred['full_prediction_result'];
+                }
             } else if (data.disease_probabilities) {
                 probabilities = data.disease_probabilities;
                 
@@ -1015,9 +1288,34 @@ body {
                     document.getElementById('reason').innerText = data['AI大模型分析']['病情依据'] || '暂无';
                     document.getElementById('suggest').innerText = data['AI大模型分析']['建议'] || '暂无';
                 }
+                
+                if (data['full_prediction_result']) {
+                    fullPrediction = data['full_prediction_result'];
+                }
+            }
+            
+            // 处理 full_prediction_result 数据
+            if (fullPrediction) {
+                // 健康仪表盘
+                if (fullPrediction['健康仪表盘数据']) {
+                    document.getElementById('dashboardSection').style.display = 'block';
+                    renderHealthDashboard(fullPrediction['健康仪表盘数据']);
+                }
+                
+                // 风险因素雷达图
+                if (fullPrediction['雷达图数据']) {
+                    document.getElementById('factorsRadarSection').style.display = 'block';
+                    renderFactorsRadarChart(fullPrediction['雷达图数据']);
+                }
+                
+                // 风险因素柱状图
+                if (fullPrediction['柱状图数据']) {
+                    document.getElementById('factorsBarSection').style.display = 'block';
+                    renderFactorsBarChart(fullPrediction['柱状图数据']);
+                }
             }
 
-            // 渲染雷达图
+            // 渲染发病概率雷达图
             if (probabilities && probabilities.length > 0) {
                 renderRadarChart(probabilities);
             }
@@ -1025,22 +1323,20 @@ body {
 
         async function loadReport(reportId) {
             try {
-                // 获取问卷详情
-                const detailResult = await getQuestionnaireDetail(reportId);
-                if (!detailResult.success) {
-                    showToast('获取问卷详情失败', 'error');
-                    return;
-                }
-
+                console.log('加载报告 ID:', reportId);
+                
                 // 获取历史分析结果
                 const historyResult = await getHistoryAnalysis(reportId);
+                console.log('获取的历史分析结果:', historyResult);
+                
                 if (historyResult.code === 200 && historyResult.data) {
+                    console.log('显示报告数据:', historyResult.data);
                     showReport(historyResult.data);
                 } else {
                     showToast('获取分析结果失败', 'error');
                 }
             } catch (error) {
-                console.error(error);
+                console.error('加载报告错误:', error);
                 showToast(error.message || '加载报告失败', 'error');
             }
         }
@@ -1051,6 +1347,7 @@ body {
             // 检查URL中是否有report参数
             const urlParams = new URLSearchParams(window.location.search);
             const reportId = urlParams.get('report');
+            console.log('URL中的 reportId:', reportId);
             if (reportId) {
                 loadReport(reportId);
             }

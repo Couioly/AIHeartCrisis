@@ -24,6 +24,7 @@ logs/
 
 # 排除项文件夹
 排除项/
+.fastapicloud/
 
 # 模型文件
 *.pkl
