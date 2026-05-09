@@ -113,13 +113,116 @@ async def heart_disease_predict(db: AsyncSession, data: AIPredictData):
                 }
             )
         
-        # 6. 构建响应数据
+        # 6. 根据用户真实输入过滤AI返回的数据（双重保障）
+        # 记录用户真实提供了哪些健康数据
+        user_provided_data = {
+            "blood_pressure": input_dict.get("blood_pressure"),
+            "blood_lipids": input_dict.get("blood_lipids"),
+            "blood_sugar": input_dict.get("blood_sugar"),
+            "bmi": input_dict.get("bmi"),
+            "ecg": input_dict.get("ecg"),
+            "heart_rate": input_dict.get("heart_rate"),
+            "blood_oxygen": input_dict.get("blood_oxygen")
+        }
+        
+        # 过滤健康仪表盘数据 - 只保留用户真实填写的
+        if "健康仪表盘数据" in prediction_data:
+            filtered_dashboard = {}
+            dashboard_keys = ["heart_rate", "blood_pressure", "blood_oxygen", "blood_sugar", "bmi"]
+            for key in dashboard_keys:
+                # 检查用户是否提供了对应的数据
+                user_key = key
+                if key == "heart_rate":
+                    user_key = "heart_rate"
+                elif key == "blood_pressure":
+                    user_key = "blood_pressure"
+                elif key == "blood_oxygen":
+                    user_key = "blood_oxygen"
+                elif key == "blood_sugar":
+                    user_key = "blood_sugar"
+                elif key == "bmi":
+                    user_key = "bmi"
+                
+                if user_provided_data.get(user_key) not in [None, "None", ""]:
+                    if key in prediction_data["健康仪表盘数据"]:
+                        filtered_dashboard[key] = prediction_data["健康仪表盘数据"][key]
+            prediction_data["健康仪表盘数据"] = filtered_dashboard
+        
+        # 过滤雷达图数据
+        if "雷达图数据" in prediction_data:
+            radar_labels = prediction_data["雷达图数据"]["labels"]
+            radar_values = prediction_data["雷达图数据"]["values"]
+            filtered_radar_labels = []
+            filtered_radar_values = []
+            
+            # 可从问卷推断的风险因素（总是保留）
+            inference_factors = ["睡眠", "工作压力", "饮食习惯", "运动情况"]
+            
+            for i, label in enumerate(radar_labels):
+                # 检查是否是可推断的因素，或者用户真实提供的健康指标
+                is_inference_factor = any(factor in label for factor in inference_factors)
+                is_user_provided = False
+                
+                # 检查是否是健康指标且用户提供了数据
+                health_indicator_map = {
+                    "血压": "blood_pressure",
+                    "血糖": "blood_sugar",
+                    "血脂": "blood_lipids",
+                    "心率": "heart_rate",
+                    "血氧": "blood_oxygen",
+                    "BMI": "bmi"
+                }
+                
+                for indicator, user_key in health_indicator_map.items():
+                    if indicator in label and user_provided_data.get(user_key) not in [None, "None", ""]:
+                        is_user_provided = True
+                        break
+                
+                if is_inference_factor or is_user_provided:
+                    filtered_radar_labels.append(label)
+                    filtered_radar_values.append(radar_values[i])
+            
+            prediction_data["雷达图数据"] = {
+                "labels": filtered_radar_labels,
+                "values": filtered_radar_values
+            }
+        
+        # 过滤柱状图数据
+        if "柱状图数据" in prediction_data:
+            filtered_bar_data = []
+            
+            for item in prediction_data["柱状图数据"]:
+                name = item.get("name", "")
+                # 检查是否是可推断的因素，或者用户真实提供的健康指标
+                is_inference_factor = any(factor in name for factor in ["睡眠", "工作压力", "饮食习惯", "运动情况"])
+                is_user_provided = False
+                
+                health_indicator_map = {
+                    "血压": "blood_pressure",
+                    "血糖": "blood_sugar",
+                    "血脂": "blood_lipids",
+                    "心率": "heart_rate",
+                    "血氧": "blood_oxygen",
+                    "BMI": "bmi"
+                }
+                
+                for indicator, user_key in health_indicator_map.items():
+                    if indicator in name and user_provided_data.get(user_key) not in [None, "None", ""]:
+                        is_user_provided = True
+                        break
+                
+                if is_inference_factor or is_user_provided:
+                    filtered_bar_data.append(item)
+            
+            prediction_data["柱状图数据"] = filtered_bar_data
+
+        # 7. 构建响应数据
         response_data = {
             "username": input_dict["username"],
             "prediction": prediction_data
         }
-        
-        # 7. 存储AI分析结果到history表
+
+        # 8. 存储AI分析结果到history表
         history_data = {
             "questionnaire_id": input_dict.get("questionnaire_id", 0),
             "username": input_dict["username"],

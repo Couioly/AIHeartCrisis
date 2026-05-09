@@ -500,6 +500,63 @@ GET /api/user/history?questionnaire_id=1
 
 ---
 
+### 2.6 查询用户的历史分析结果列表
+
+**接口地址**: `GET /api/user/history/list`
+
+**请求参数**:
+
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| username | string | 是 | 用户名 |
+
+**请求示例**:
+
+```
+GET /api/user/history/list?username=testuser
+```
+
+**响应示例**:
+
+**成功 (200)**:
+```json
+{
+  "code": 200,
+  "message": "查询成功",
+  "data": [
+    {
+      "id": 1,
+      "questionnaire_id": 1,
+      "username": "testuser",
+      "prediction_time": "2024-01-01T12:00:00",
+      "risk_level": "低风险",
+      "high_probability_diseases": ["冠心病"],
+      "diagnosis_basis": "根据您的生活习惯...",
+      "recommendations": "建议您保持健康饮食...",
+      "full_prediction_result": {
+        "AI大模型PKL预测发病概率": [],
+        "AI大模型分析": {},
+        "雷达图数据": {},
+        "柱状图数据": [],
+        "健康仪表盘数据": {},
+        "数据来源": []
+      },
+      "created_at": "2024-01-01T12:00:00"
+    }
+  ]
+}
+```
+
+**用户不存在 (404)**:
+```json
+{
+  "code": 404,
+  "message": "用户不存在"
+}
+```
+
+---
+
 ## 3. 体检报告接口
 
 ### 3.1 上传体检报告并提取数据
@@ -571,6 +628,59 @@ GET /api/user/history?questionnaire_id=1
       "diseases": []
     }
   }
+}
+```
+
+---
+
+### 3.3 获取用户最新体检报告
+
+**接口地址**: `GET /api/medical-report/latest`
+
+**请求参数**:
+
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| username | string | 是 | 用户名 |
+
+**请求示例**:
+
+```
+GET /api/medical-report/latest?username=testuser
+```
+
+**响应示例**:
+
+**成功 (200)**:
+```json
+{
+  "code": 200,
+  "message": "获取成功",
+  "data": {
+    "id": 1,
+    "username": "testuser",
+    "created_at": "2024-01-01T12:00:00",
+    "report_data": {
+      "age": 35,
+      "sex": "男",
+      "height": 175,
+      "weight": 70,
+      "BMI": 22.9,
+      "heart_rate": 72
+    },
+    "ai_report_result": {
+      "diseases": []
+    }
+  }
+}
+```
+
+**暂无体检报告 (404)**:
+```json
+{
+  "code": 404,
+  "message": "暂无体检报告",
+  "data": null
 }
 ```
 
