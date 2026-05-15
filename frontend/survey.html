@@ -941,27 +941,73 @@ body {
                 const education = getFormValue(form, 'edu');
 
                 const answers = [];
-                let questionId = 1;
                 
-                ['work_mode', 'work_hour_day', 'work_day_week', 'sit', 'work_intensity', 
-                 'commute_hour', 'commute_type', 'emotion', 'support', 'stress_score', 
-                 'stress_react', 'sleep_quality', 'insomnia_freq', 'routine', 'noon_nap', 
-                 'symptom', 'heart_discomfort', 'sport_react', 'family_history', 'self_history', 
-                 'diet', 'sport', 'smoke', 'drink', 'caffeine', 'know_overwork', 
-                 'risk_reason', 'use_ai'].forEach(name => {
+                // 定义问卷题目的映射关系
+                const questionMapping = [
+                    { id: 1, name: 'age', type: 'radio', is_core: false },
+                    { id: 2, name: 'gender', type: 'radio', is_core: false },
+                    { id: 3, name: 'job', type: 'radio', is_core: false },
+                    { id: 4, name: 'edu', type: 'radio', is_core: false },
+                    { id: 5, name: 'work_mode', type: 'radio', is_core: false },
+                    { id: 6, name: 'work_hour_day', type: 'composite', is_core: true },
+                    { id: 7, name: 'sit', type: 'radio', is_core: true },
+                    { id: 8, name: 'work_intensity', type: 'radio', is_core: true },
+                    { id: 9, name: 'commute_hour', type: 'composite', is_core: true },
+                    { id: 10, name: 'emotion', type: 'checkbox', is_core: true },
+                    { id: 11, name: 'support', type: 'radio', is_core: true },
+                    { id: 12, name: 'stress_score', type: 'number', is_core: true },
+                    { id: 13, name: 'stress_react', type: 'checkbox', is_core: false },
+                    { id: 14, name: 'sleep_quality', type: 'radio', is_core: true },
+                    { id: 15, name: 'insomnia_freq', type: 'radio', is_core: true },
+                    { id: 16, name: 'routine', type: 'radio', is_core: true },
+                    { id: 17, name: 'noon_nap', type: 'radio', is_core: true },
+                    { id: 18, name: 'symptom', type: 'checkbox', is_core: true },
+                    { id: 19, name: 'heart_discomfort', type: 'radio', is_core: true },
+                    { id: 20, name: 'sport_react', type: 'radio', is_core: true },
+                    { id: 21, name: 'family_history', type: 'checkbox', is_core: true },
+                    { id: 22, name: 'self_history', type: 'checkbox', is_core: true },
+                    { id: 23, name: 'diet', type: 'checkbox', is_core: false },
+                    { id: 24, name: 'sport', type: 'radio', is_core: true },
+                    { id: 25, name: 'smoke', type: 'radio', is_core: true },
+                    { id: 26, name: 'drink', type: 'radio', is_core: true },
+                    { id: 27, name: 'caffeine', type: 'radio', is_core: true },
+                    { id: 28, name: 'know_overwork', type: 'radio', is_core: false },
+                    { id: 29, name: 'risk_reason', type: 'checkbox', is_core: false },
+                    { id: 30, name: 'use_ai', type: 'radio', is_core: false }
+                ];
+                
+                questionMapping.forEach(q => {
                     let value;
-                    if (['emotion', 'stress_react', 'symptom', 'family_history', 
-                         'self_history', 'diet', 'risk_reason'].includes(name)) {
-                        value = getFormValue(form, name, 'checkbox');
-                    } else if (['work_hour_day', 'work_day_week', 'commute_hour', 'stress_score'].includes(name)) {
-                        value = getFormValue(form, name, 'number');
+                    
+                    if (q.type === 'composite') {
+                        if (q.id === 6) {
+                            const dayHours = getFormValue(form, 'work_hour_day', 'number');
+                            const weekDays = getFormValue(form, 'work_day_week', 'number');
+                            if (dayHours && weekDays) {
+                                value = `每天${dayHours}小时,每周${weekDays}天`;
+                            }
+                        } else if (q.id === 9) {
+                            const commuteHour = getFormValue(form, 'commute_hour', 'number');
+                            const commuteType = getFormValue(form, 'commute_type');
+                            if (commuteHour && commuteType) {
+                                value = `往返${commuteHour}小时,${commuteType}`;
+                            }
+                        }
+                    } else if (q.type === 'checkbox') {
+                        value = getFormValue(form, q.name, 'checkbox');
+                    } else if (q.type === 'number') {
+                        value = getFormValue(form, q.name, 'number');
                     } else {
-                        value = getFormValue(form, name);
+                        value = getFormValue(form, q.name);
                     }
+                    
                     if (value) {
-                        answers.push({ question_id: questionId, answer: value });
+                        answers.push({ 
+                            question_id: q.id, 
+                            answer: value,
+                            is_core: q.is_core
+                        });
                     }
-                    questionId++;
                 });
 
                 const submitData = {
